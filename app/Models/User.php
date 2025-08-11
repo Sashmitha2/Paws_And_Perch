@@ -18,9 +18,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'phone_number',
+        'role',
     ];
 
     /**
@@ -44,5 +46,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    //a customer has only one cart
+    public function cart(){
+
+        return $this->hasOne(Cart::class, 'user_id');
+    }
+
+    //a customer can place many orders
+    public function orders(){
+        return $this->hasMany(Order::class, 'user_id');
+    }
+
+    //an admin can manage many products
+    public function product(){
+        return $this->hasMany(Product::class, 'admin_id' );
     }
 }
