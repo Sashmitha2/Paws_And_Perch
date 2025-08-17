@@ -63,4 +63,15 @@ class User extends Authenticatable
     public function product(){
         return $this->hasMany(Product::class, 'admin_id' );
     }
+
+
+    //check if user is an admin
+    public function isAdmin(){
+        return $this->role === 'Admin';
+    }
+
+    //chacke if user is a customer
+    public function isCustomer(){
+        return $this->role=== 'Customer';
+    }
 }
