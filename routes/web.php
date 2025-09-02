@@ -7,6 +7,15 @@ Route::get('/', function () {
 }); 
 
 Route::get('test',function (){
-    $user = App\Models\User::find(1);
-    return $user;
+   // $user = App\Models\User::find(1);
+   // return $user;
+
+
+   //$product = App\Models\Product::find(4);
+   //return $product->category;
+
+   $order= App\Models\OrderItem::find(7);
+   return $order->order;
 });
+
+
