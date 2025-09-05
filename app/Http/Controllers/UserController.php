@@ -13,8 +13,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with(['cart','orders'])->paginate(10);
-        return UserResource::collection($users);    }
+        $user = User::with(['cart','orders'])->paginate(10);
+        return UserResource::collection($user);    }
 
     /**
      * Store a newly created resource in storage.

@@ -54,8 +54,8 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'product_name'=>'required|string|max:255',
-            'price'=>'required|numeric|min:0',
+            'product_name'=>'sometimes|string|max:255',
+            'price'=>'sometimes|numeric|min:0',
             'description'=>'nullable|string',
             'image'=>'nullable|string|max:255',
         ]);
