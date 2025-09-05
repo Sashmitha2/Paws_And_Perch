@@ -11,7 +11,6 @@ class Product extends Model
     //
     protected $fillable = [
         'category_id',
-        'admin_id',
         'product_name',
         'price',
         'description',
@@ -26,7 +25,5 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function admin(){
-        return $this->belongsTo(User::class, 'admin_id');
-    }
+    
 }

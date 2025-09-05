@@ -23,12 +23,10 @@ class ProductFactory extends Factory
         // Pick a random category that is NOT a main category (has a parent_category_id)
         $category = Category::whereNotNull('parent_category_id')->inRandomOrder()->first();
 
-        // Pick a random admin user (assuming you have users with role 'admin')
-        $admin = User::where('role', 'Admin')->inRandomOrder()->first();
+        
 
         return [
             'category_id' => $category ? $category->id : null,
-            'admin_id' => $admin ? $admin->id : 1, // fallback to 1 if no admin found
             'product_name' => $this->faker->words(3, true), // e.g. "Dog Chew Toy"
             'price' => $this->faker->randomFloat(2, 5, 100), // prices between 5 and 100
             'description' => $this->faker->paragraph(),
