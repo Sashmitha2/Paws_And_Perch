@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = Order::with(['user','items','payment'])->paginate(10);
+         $user = Auth::user();
+         
+        $order = Order::with(['user','items','payment'])->where('user_id', $user->id)->paginate(10);
         return OrderResource::collection($order);
     }
 
