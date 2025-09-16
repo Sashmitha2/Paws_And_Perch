@@ -19,3 +19,26 @@ Route::get('test',function (){
 });
 
 
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
+Route::middleware('auth')->group(function() {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin.login');
+    Route::post('/admin/login', [AdminLoginController::class, 'store']);
+});
+
+Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
+
