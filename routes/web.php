@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AdminLoginController;
+
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.select-role');
 }); 
 
 Route::get('test',function (){
@@ -41,4 +44,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
+
+Route::get('/select-role', function () {
+    return view('auth.select-role');
+});
 
