@@ -5,6 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@1,700&display=swap" rel="stylesheet">
+        <!-- Tailwind CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
@@ -16,6 +24,17 @@
 
         <!-- Styles -->
         @livewireStyles
+
+         <style>
+        body {
+            background: url('{{ asset('images/bac.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .lobster-font {
+            font-family: 'Lobster Two', cursive;
+        }
+    </style>
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">

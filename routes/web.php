@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AdminLoginController;
-
+use App\Http\Controllers\AuthController;
+use App\Livewire\HomePage;
 
 Route::get('/', function () {
     return view('auth.select-role');
@@ -23,15 +24,15 @@ Route::get('test',function (){
 
 
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/home', function () {
+//         return view('home-page');
+//     })->name('home');
+// });
 
 Route::middleware('auth')->group(function() {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -43,9 +44,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/admin/login', [AdminLoginController::class, 'store']);
 });
 
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
 Route::get('/select-role', function () {
     return view('auth.select-role');
 });
 
+ 
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/home', HomePage::class)->name('home');
+});

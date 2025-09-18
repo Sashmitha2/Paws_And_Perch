@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
+use App\Actions\Fortify\RegisterResponse;
+
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+    $this->app->bind(RegisterResponseContract::class, RegisterResponse::class);
+
     }
 
     /**

@@ -31,10 +31,21 @@ class AuthController extends Controller
 
     }
 
+    // public function logout(Request $request)
+    // {
+    //     $request->user()->currentAccessToken()->delete();
+        
+    //     return response()->json(['message' => 'Logged out successfully']);
+    // }
+
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        
-        return response()->json(['message' => 'Logged out successfully']);
+        auth()->logout();  // Log the user out of the session
+
+        $request->session()->invalidate();  // Invalidate the session
+        $request->session()->regenerateToken();  // Regenerate CSRF token
+
+        return redirect()->route('login');  // Redirect to customer login page
     }
+
 }
