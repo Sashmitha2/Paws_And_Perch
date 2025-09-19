@@ -3,21 +3,31 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
+                {{-- <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('admin.dashboard') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
+                </div> --}}
+
+                <!-- Custom Logo and Brand Name -->
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('home') }}">
+                        <h1 class="text-2xl lobster-font font-bold text-gray-800">🐾 Paws & Perch</h1>
+                    </a>
                 </div>
 
+
+
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
             </div>
 
+                
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
@@ -102,6 +112,11 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
+                             {{-- <!-- Added My Orders Link -->
+                            <x-dropdown-link href="{{ route('orders') }}">
+                                My Orders
+                            </x-dropdown-link> --}}
+
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
                                     {{ __('API Tokens') }}
@@ -111,10 +126,10 @@
                             <div class="border-t border-gray-200"></div>
 
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('admin.logout') }}" x-data>
+                            <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
 
-                                <x-dropdown-link href="{{ route('admin.logout') }}"
+                                <x-dropdown-link href="{{ route('logout') }}"
                                          @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
