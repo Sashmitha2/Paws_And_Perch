@@ -59,7 +59,7 @@
                     <div class="p-6">
                         <h4 class="text-xl font-semibold text-gray-800">🐶 For Dogs</h4>
                         <p class="text-gray-600 mt-2">Toys, treats, grooming, collars and more.</p>
-                        <a href="{{ route('products.dogs') }}" class="text-pink-600 mt-4 inline-block hover:underline">Explore Dog Supplies →</a>
+                        <a href="{{ route('products.dogs', ['parentCategoryId' => 1]) }}" class="text-pink-600 mt-4 inline-block hover:underline">Explore Dog Product</a>
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                     <div class="p-6">
                         <h4 class="text-xl font-semibold text-gray-800">🐦 For Birds</h4>
                         <p class="text-gray-600 mt-2">Cages, perches, feeders, and interactive toys.</p>
-                        <a href="#" class="text-pink-600 mt-4 inline-block hover:underline">Explore Bird Supplies →</a>
+                         <a href="{{ route('products.birds', ['parentCategoryId' => 3]) }}" class="text-pink-600 mt-4 inline-block hover:underline">Explore Bird Supplies</a>
                     </div>
                 </div>
             </div>

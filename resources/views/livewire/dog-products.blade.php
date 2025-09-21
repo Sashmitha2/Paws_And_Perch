@@ -1,38 +1,94 @@
-<div class="max-w-7xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold mb-8 text-gray-800">Dog Products</h1>
+<div class="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white text-gray-900 font-[Inter]">
+    <div class="max-w-screen-xl mx-auto px-6 py-20">
 
-    <!-- Filters -->
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input wire:model.debounce.500ms="search" type="text" placeholder="Search dog products..."
-               class="w-full border px-3 py-2 rounded shadow-sm">
+        {{-- Page Title --}}
+        <h1 class="text-4xl md:text-6xl font-extrabold text-center tracking-tight font-[Playfair Display] text-gray-900 drop-shadow-sm">
+            Discover Elegant <span class="text-blue-600">Dog Products</span>
+        </h1>
+        <p class="text-center mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+            Curated essentials your dog will love — crafted for comfort and luxury.
+        </p>
 
-        <input wire:model="min_price" type="number" placeholder="Min Price"
-               class="w-full border px-3 py-2 rounded shadow-sm">
-
-        <input wire:model="max_price" type="number" placeholder="Max Price"
-               class="w-full border px-3 py-2 rounded shadow-sm">
-    </div>
-
-    <!-- Product Grid -->
-    @if($products->count())
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach ($products as $product)
-                <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <img src="{{ $product->image ?? '/images/default.jpg' }}" alt="{{ $product->product_name }}"
-                         class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg text-gray-800">{{ $product->product_name }}</h3>
-                        <p class="text-gray-600 text-sm mt-1">{{ Str::limit($product->description, 60) }}</p>
-                        <p class="text-pink-600 font-bold mt-2">₹{{ number_format($product->price, 2) }}</p>
-                    </div>
-                </div>
+        {{-- Subcategories --}}
+        <div class="flex flex-wrap justify-center gap-3 mt-12">
+            @foreach($subcategories as $subcategory)
+                <button
+                    class="px-5 py-2.5 bg-blue-100 text-blue-800 hover:bg-blue-200 rounded-full transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                    {{ $subcategory->name }}
+                </button>
             @endforeach
         </div>
 
-        <div class="mt-8">
-            {{ $products->links() }}
+        {{-- Search Input --}}
+        <div class="mt-10 mb-16 flex justify-center">
+            <input
+                type="text"
+                wire:model.debounce.500ms="search"
+                placeholder="Search dog products..."
+                class="w-full md:w-1/2 px-5 py-3 border border-blue-300 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-200 shadow-md placeholder:text-gray-400 text-gray-800"
+            />
         </div>
-    @else
-        <p class="text-gray-600">No dog products found.</p>
-    @endif
+
+        {{-- Products Grid --}}
+        @if($products->isEmpty())
+            <p class="text-center text-gray-500 text-lg italic">No dog products found.</p>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+                @foreach($products as $product)
+                    <div class="group bg-white border border-gray-200 rounded-3xl p-5 shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between relative overflow-hidden">
+
+                        {{-- Ribbon (Optional new tag) --}}
+                        <div class="absolute top-0 right-0">
+                            <span class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">New</span>
+                        </div>
+
+                        {{-- Image --}}
+                        @if($product->image)
+                            <img 
+                                src="{{ asset('storage/' . $product->image) }}" 
+                                alt="{{ $product->product_name }}" 
+                                class="rounded-xl mb-4 w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                            >
+                        @else
+                            <div class="mb-4 w-full h-48 flex items-center justify-center bg-gray-100 text-gray-400 rounded-lg text-sm italic">
+                                No image available
+                            </div>
+                        @endif
+
+                        {{-- Product Details --}}
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 font-[Playfair Display] group-hover:text-blue-600 transition">
+                                {{ $product->product_name }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                Category: <span class="font-medium text-gray-700">{{ $product->category->name }}</span>
+                            </p>
+
+                            <p class="mt-2 text-sm text-gray-600 line-clamp-3">
+                                {{ $product->description }}
+                            </p>
+                        </div>
+
+                        {{-- Price & Add to Cart --}}
+                        <div class="mt-6 flex items-center justify-between">
+                            <p class="text-lg font-semibold text-green-600">
+                                Rs.{{ number_format($product->price, 2) }}
+                            </p>
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition font-semibold shadow-sm"
+                                wire:click.prevent="addToCart({{ $product->id }})"
+                            >
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+    </div>
+
+    @include('layouts.footer')
 </div>

@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Livewire\HomePage;
 use App\Livewire\DogProducts;
 use App\Livewire\CatProducts;
+use App\Livewire\BirdProducts;
+use App\Livewire\AdminProductManager;
 
 Route::get('/', function () {
     return view('auth.select-role');
@@ -85,9 +87,21 @@ Route::get('/select-role', function () {
 
 //Route::get('/products', ProductBrowse::class)->name('products.browse');
 
-Route::get('/products/dogs', DogProducts::class)->name('products.dogs');
+Route::get('/products/dogs/{parentCategoryId}', DogProducts::class)->name('products.dogs');
 //Route::get('/products/cats', CatProducts::class)->name('products.cats');
 
 Route::get('/products/cats/{parentCategoryId}', CatProducts::class)->name('products.cats');
 
+Route::get('/products/birds/{parentCategoryId}', BirdProducts::class)->name('products.birds');
+
 Route::get('/cart', \App\Livewire\CartPage::class)->name('cart.index');
+
+
+
+// Route::middleware(['auth', 'admin'])->group(function () {
+//     Route::get('/admin/products', AdminProductManager::class)->name('admin.products');
+// });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/products', AdminProductManager::class)->name('admin.products');
+});

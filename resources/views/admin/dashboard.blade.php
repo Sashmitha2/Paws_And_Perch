@@ -22,18 +22,18 @@
             <a href="{{ route('admin.products') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.products*') ? 'bg-gray-200' : '' }}">
                 📦 Products
             </a>
-            <a href="{{ route('admin.orders') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.orders*') ? 'bg-gray-200' : '' }}">
+            {{--<a href="{{ route('admin.orders') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.orders*') ? 'bg-gray-200' : '' }}">
                 🛒 Orders
             </a>
             <a href="{{ route('admin.users') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.users*') ? 'bg-gray-200' : '' }}">
                 👤 Users
-            </a>
-            <a href="{{ route('admin.reports') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.reports*') ? 'bg-gray-200' : '' }}">
+            </a> --}}
+            {{--<a href="{{ route('admin.reports') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.reports*') ? 'bg-gray-200' : '' }}">
                 📊 Reports
             </a>
             <a href="{{ route('admin.settings') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.settings*') ? 'bg-gray-200' : '' }}">
                 ⚙️ Settings
-            </a>
+            </a> --}}
         </nav>
     </aside>
 
@@ -55,7 +55,7 @@
         </header>
 
         <!-- Metrics Cards -->
-        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {{--<div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white shadow rounded-lg p-5">
                 <div class="text-sm font-medium text-gray-500">Total Users</div>
                 <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $totalUsers }}</div>
@@ -72,7 +72,7 @@
                 <div class="text-sm font-medium text-gray-500">Products Low in Stock</div>
                 <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $lowStockCount }}</div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Charts & Recent Orders Section -->
         <div class="p-6 space-y-6 flex-1 overflow-y-auto">
@@ -99,7 +99,7 @@
                                 <th class="px-6 py-3"></th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        {{--<tbody class="bg-white divide-y divide-gray-200">
                             @foreach($recentOrders as $order)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->id }}</td>
@@ -120,12 +120,12 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody> --}}
                     </table>
 
-                    @if($recentOrders->isEmpty())
+                    {{--@if($recentOrders->isEmpty())
                         <p class="text-gray-500">No recent orders</p>
-                    @endif
+                    @endif--}}
                 </div>
             </div>
 
@@ -135,11 +135,11 @@
         <footer class="bg-white border-t mt-auto py-4 px-6">
             <div class="flex justify-between text-sm text-gray-500">
                 <span>© {{ date('Y') }} Paws & Perch Admin. All rights reserved.</span>
-                <div>
+                {{--<div>
                     <a href="{{ route('admin.settings') }}" class="hover:underline">Settings</a>
                     <span class="mx-2">|</span>
                     <a href="{{ route('admin.profile') }}" class="hover:underline">Profile</a>
-                </div>
+                </div>--}}
             </div>
         </footer>
 
@@ -148,7 +148,7 @@
 
 <!-- Include Chart.js or your preferred chart library script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+{{--<script>
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {
         type: 'line',
@@ -172,4 +172,4 @@
             }
         }
     });
-</script>
+</script> --}}
