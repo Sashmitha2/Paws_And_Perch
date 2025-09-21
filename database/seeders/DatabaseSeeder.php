@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+ use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,12 +21,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
-        //User::factory()->create([
-          //  'name' => 'Test User',
-            //'email' => 'test@example.com',
-        //]);
+        User::factory()->create([
+           'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
 
         $this->call(AdminUserSeeder::class);
 
@@ -73,15 +73,15 @@ class DatabaseSeeder extends Seeder
         }
         
 
-        //creating products linked to categories
+        // //creating products linked to categories
         $products = Product::factory(15)->create();
 
 
-        //creating 7 users
-        $customers = User::factory(7)->create([
-            'role'=>'Customer',
-            'password'=>Hash::make('password'),
-        ]);
+        // //creating 7 users
+         $customers = User::factory(7)->create([
+             'role'=>'Customer',
+             'password'=>Hash::make('password'),
+         ]);
 
         foreach ($customers as $customer) {
 
@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'active',
         ]);
 
-        // Create 1-3 orders per customer
+    //     // Create 1-3 orders per customer
         $orders = Order::factory(rand(1, 3))->create([
             'user_id' => $customer->id,
             'order_status' => 'pending',
@@ -132,4 +132,5 @@ class DatabaseSeeder extends Seeder
 }
 
 }
+
 }

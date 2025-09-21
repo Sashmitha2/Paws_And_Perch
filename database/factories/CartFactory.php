@@ -23,7 +23,6 @@ class CartFactory extends Factory
 
         return [
             'user_id' => $user ? $user->id : 1,
-            'created_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'status' => $this->faker->randomElement(['active', 'pending', 'completed']),
         ];
     }

@@ -36,6 +36,14 @@ Route::get('test',function (){
 //     })->name('home');
 // });
 
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/home', HomePage::class)->name('home');
+});
+
 Route::middleware('auth')->group(function() {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
@@ -57,9 +65,9 @@ Route::get('/select-role', function () {
 
  
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/home', HomePage::class)->name('home');
-});
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('/home', HomePage::class)->name('home');
+// });
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::get('/orders', OrderController::class)->name('orders');
@@ -82,3 +90,4 @@ Route::get('/products/dogs', DogProducts::class)->name('products.dogs');
 
 Route::get('/products/cats/{parentCategoryId}', CatProducts::class)->name('products.cats');
 
+Route::get('/cart', \App\Livewire\CartPage::class)->name('cart.index');

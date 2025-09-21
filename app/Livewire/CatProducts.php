@@ -1,10 +1,11 @@
 <?php
 
-
-
 namespace App\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Product;
 
@@ -14,6 +15,8 @@ class CatProducts extends Component
     public $subcategories;
     public $products;
     public $search = '';
+
+    public $cart;  // store user's cart
 
     public function mount($parentCategoryId)
     {
@@ -27,11 +30,18 @@ class CatProducts extends Component
 
         // Load products under these subcategories
         $this->products = Product::whereIn('category_id', $subCatIds)->get();
+
+        // Initialize user's cart if logged in
+        if (Auth::check()) {
+            $this->cart = Cart::firstOrCreate(
+                ['user_id' => Auth::id()],
+                ['status' => 'active']
+            );
+        }
     }
 
     public function updatedSearch()
     {
-        // Filter products by search query within the subcategories
         $subCatIds = Category::where('parent_category_id', $this->parentCategoryId)->pluck('id')->toArray();
 
         $this->products = Product::whereIn('category_id', $subCatIds)
@@ -39,10 +49,41 @@ class CatProducts extends Component
             ->get();
     }
 
+    public function addToCart($productId)
+    {
+        if (!Auth::check()) {
+            session()->flash('error', 'Please login to add items to cart.');
+            return;
+        }
+
+        // Ensure cart is loaded
+        if (!$this->cart) {
+            $this->cart = Cart::firstOrCreate(
+                ['user_id' => Auth::id()],
+                ['status' => 'active']
+            );
+        }
+
+        $cartItem = CartItem::where('cart_id', $this->cart->id)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity++;
+            $cartItem->save();
+        } else {
+            CartItem::create([
+                'cart_id' => $this->cart->id,
+                'product_id' => $productId,
+                'quantity' => 1,
+            ]);
+        }
+
+        session()->flash('success', 'Product added to cart!');
+    }
+
     public function render()
     {
         return view('livewire.cat-products')->layout('layouts.app');
     }
 }
-
-?>
