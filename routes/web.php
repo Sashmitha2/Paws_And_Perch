@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\AuthController;
 use App\Livewire\HomePage;
@@ -25,6 +26,8 @@ Route::get('test',function (){
    $order= App\Models\OrderItem::find(7);
    return $order->order;
 });
+
+Route::get('/api/products', [ProductController::class, 'index']);
 
 
 

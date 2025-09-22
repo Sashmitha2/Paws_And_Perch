@@ -1,10 +1,94 @@
-<?php
+<?php 
+
+// namespace App\Http\Controllers;
+
+// use App\Models\Product;
+// use App\Http\Resources\ProductResource;
+// use Illuminate\Http\Request; 
+
+// class ProductController extends Controller
+// {
+//     /**
+//      * Display a listing of the resource.
+//      */
+//     public function index()
+//     {
+
+//         ///allows to get 10 products per page
+//         $product = Product::with(['category','orderitems'])->paginate(10);
+//         return ProductResource::collection($product);
+
+
+//     }
+
+//     /**
+//      * Store a newly created resource in storage.
+//      */
+//     public function store(Request $request)
+//     {
+//         $validated= $request->validate([
+//             'category_id' => 'required|exists:categories,id',
+//             'product_name' => 'required|string|max:255',
+//             'price'=> 'required|numeric|min:0',
+//             'description'=>'nullable|string',
+//             'image'=>'nullable|string|max:255',
+//         ]);
+
+//         $product=Product::create($validated);
+//         return new ProductResource($product);
+        
+//     }
+
+//     /**
+//      * Display the specified resource.
+//      */
+//     public function show(string $id)
+//     {
+//         $product = Product::with(['category','orderitems'])->findOrFail($id);
+//         return new ProductResource($product);
+//     }
+
+//     /**
+//      * Update the specified resource in storage.
+//      */
+//     public function update(Request $request, string $id)
+//     {
+//         $validated = $request->validate([
+//             'product_name'=>'sometimes|string|max:255',
+//             'price'=>'sometimes|numeric|min:0',
+//             'description'=>'nullable|string',
+//             'image'=>'nullable|string|max:255',
+//         ]);
+
+//         $product = Product::findOrFail($id);
+//         $product->update($validated);
+
+//         return new ProductResource($product);
+//     }
+
+//     /**
+//      * Remove the specified resource from storage.
+//      */
+//     public function destroy(string $id)
+//     {
+//         $product=Product::findOrFail($id);
+//         $product->delete();
+
+//         return response()->json(['message' => 'Product deleted successfully'], 200);
+
+//     }
+
+// } 
+
+
+
 
 namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,12 +97,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-
-        ///allows to get 10 products per page
-        $product = Product::with(['category','orderitems'])->paginate(10);
-        return ProductResource::collection($product);
-
-
+        $products = Product::with(['category.parent', 'orderitems'])->paginate(10);
+        return ProductResource::collection($products);
     }
 
     /**
@@ -26,17 +106,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validated= $request->validate([
+        $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'product_name' => 'required|string|max:255',
-            'price'=> 'required|numeric|min:0',
-            'description'=>'nullable|string',
-            'image'=>'nullable|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048', // image upload
         ]);
 
-        $product=Product::create($validated);
+        // Handle image upload if present
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product = Product::create($validated);
+
         return new ProductResource($product);
-        
     }
 
     /**
@@ -44,7 +129,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::with(['category','orderitems'])->findOrFail($id);
+        $product = Product::with(['category.parent', 'orderitems'])->findOrFail($id);
         return new ProductResource($product);
     }
 
@@ -54,13 +139,24 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'product_name'=>'sometimes|string|max:255',
-            'price'=>'sometimes|numeric|min:0',
-            'description'=>'nullable|string',
-            'image'=>'nullable|string|max:255',
+            'category_id' => 'sometimes|exists:categories,id',
+            'product_name' => 'sometimes|string|max:255',
+            'price' => 'sometimes|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $product = Product::findOrFail($id);
+
+        // Handle new image upload (delete old image optionally)
+        if ($request->hasFile('image')) {
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
         $product->update($validated);
 
         return new ProductResource($product);
@@ -71,11 +167,18 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product=Product::findOrFail($id);
+        $product = Product::findOrFail($id);
+
+        // Optionally delete image file from storage
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
 
         return response()->json(['message' => 'Product deleted successfully'], 200);
-
     }
-
 }
+
+
+?>

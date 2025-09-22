@@ -8,6 +8,7 @@
 
 <!-- resources/views/admin/dashboard.blade.php -->
 
+
 <div class="min-h-screen bg-gray-100 flex">
 
     <!-- Sidebar -->
@@ -147,7 +148,12 @@
 </div>
 
 <!-- Include Chart.js or your preferred chart library script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>--}}
+
+<script>
+    window.apiToken = @json(session('api_token'));
+</script>
+
 {{--<script>
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {

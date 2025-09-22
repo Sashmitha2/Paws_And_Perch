@@ -7,13 +7,29 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function dashboard(){
+    // public function dashboard(){
 
-        if (Auth::check() && Auth::user()->role === 'Admin'){
-            return view('admin.dashboard');
+    //     if (Auth::check() && Auth::user()->role === 'Admin'){
+    //         return view('admin.dashboard');
 
-        }
+    //     }
 
-        abort(403, 'Unauthorized access');
-    }
+    //     abort(403, 'Unauthorized access');
+    // }
+
+    public function dashboard()
+{
+    // Retrieve or generate the API token for admin
+    $apiToken = auth()->user()->createToken('admin-token')->plainTextToken;
+
+    // Store in session (or pass directly to view)
+    session(['api_token' => $apiToken]);
+
+    // Pass token explicitly to view as a fallback
+    return view('admin.dashboard', [
+        'apiToken' => $apiToken,
+        // other data...
+    ]);
+}
+
 }
