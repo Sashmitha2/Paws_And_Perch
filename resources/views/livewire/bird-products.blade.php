@@ -1,6 +1,18 @@
 <div class="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white text-gray-900 font-[Inter]">
     <div class="max-w-screen-xl mx-auto px-6 py-20">
 
+         @if (session()->has('success'))
+            <div class="mb-6 bg-green-100 text-green-800 px-6 py-4 rounded-lg text-center font-semibold">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="mb-6 bg-red-100 text-red-800 px-6 py-4 rounded-lg text-center font-semibold">
+                {{ session('error') }}
+            </div>
+        @endif
+        
         {{-- Page Title --}}
         <h1 class="text-4xl md:text-6xl font-extrabold text-center tracking-tight font-[Playfair Display] text-gray-900 drop-shadow-sm">
             Discover Elegant <span class="text-blue-600">Bird Products</span>

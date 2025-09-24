@@ -307,6 +307,15 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('orders.index') }}">
+                                {{ __('My Orders') }}
+                            </x-dropdown-link>
+
+                            {{-- <a href="{{ route('orders.index') }}">
+                                {{ __('My Orders') }}
+                            </a> --}}
+
+
                             <!-- Logout -->
                             <div class="border-t border-gray-200"></div>
                             <form method="POST" action="{{ route('logout') }}" x-data>

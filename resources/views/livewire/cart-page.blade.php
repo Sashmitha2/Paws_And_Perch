@@ -71,5 +71,15 @@
             <span class="text-xl font-bold text-gray-900">Total:</span>
             <span class="text-2xl font-extrabold text-green-600">Rs.{{ number_format($this->totalPrice, 2) }}</span>
         </div>
+
+        <div class="mt-8 flex justify-end">
+            <a href="{{ route('checkout') }}">
+                <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded hover:bg-blue-700 transition">
+                    Proceed to Checkout
+                </button>
+            </a>
+        </div>
+
+
     @endif
 </div>

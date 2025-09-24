@@ -68,10 +68,12 @@ class OrderController extends Controller
 
         return new OrderResource($order);
 
-
-
     }
 
+    public function success(Order $order)
+    {
+        return view('orders.success', compact('order'));
+    }
     /**
      * Remove the specified resource from storage.
      */
@@ -82,4 +84,16 @@ class OrderController extends Controller
 
         return response()->json(['message'=>'Order deleted successfully', 200]);
     }
+
+
+
+    public function viewOrders()
+{
+    $orders = Order::with(['items.product', 'payment'])
+        ->where('user_id', Auth::id())
+        ->latest()
+        ->get();
+
+    return view('orders.index', compact('orders'));
+}
 }

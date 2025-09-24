@@ -177,6 +177,6 @@ class AdminProductManager extends Component
 
     public function render()
     {
-        return view('livewire.admin-product-manager')->layout('layouts.app');
+        return view('livewire.admin-product-manager')->layout('layouts.admin');
     }
 }

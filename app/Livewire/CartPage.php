@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderItem;
 
 class CartPage extends Component
 {
@@ -41,6 +44,7 @@ class CartPage extends Component
             $cartItem->save();
         } else {
             CartItem::create([
+                'user_id' => auth()->id(),
                 'cart_id' => $this->cart->id,
                 'product_id' => $productId,
                 'quantity' => 1,
@@ -119,6 +123,47 @@ class CartPage extends Component
             });
         }
 
+        public function placeOrder()
+            {
+                if ($this->cartItems->isEmpty()) {
+                    session()->flash('error', 'Your cart is empty.');
+                    return;
+                }
+
+                DB::beginTransaction();
+
+                try {
+                    $order = Order::create([
+                        'user_id' => auth()->id(),
+                        'total_amount' => $this->totalPrice,
+                        'order_status' => 'pending',
+                        'address' => 'N/A', // or 'processing'
+                    ]);
+
+                    foreach ($this->cartItems as $item) {
+                        OrderItem::create([
+                            'order_id'   => $order->id,
+                            'product_id' => $item->product_id,
+                            'quantity'   => $item->quantity,
+                            'price'      => $item->product->price,
+                        ]);
+                    }
+
+                    // Clear the cart (depends on your cart structure)
+                    foreach ($this->cartItems as $item) {
+                        $item->delete(); // or however you're clearing cart
+                    }
+
+                    DB::commit();
+
+                    return redirect()->route('order.success', ['order' => $order->id]);
+
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    session()->flash('error', 'Failed to place order. Please try again.');
+                    logger($e->getMessage());
+                }
+            }
 
 
     public function render()

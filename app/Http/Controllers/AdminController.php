@@ -7,16 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    // public function dashboard(){
-
-    //     if (Auth::check() && Auth::user()->role === 'Admin'){
-    //         return view('admin.dashboard');
-
-    //     }
-
-    //     abort(403, 'Unauthorized access');
-    // }
-
     public function dashboard()
 {
     // Retrieve or generate the API token for admin
@@ -28,7 +18,7 @@ class AdminController extends Controller
     // Pass token explicitly to view as a fallback
     return view('admin.dashboard', [
         'apiToken' => $apiToken,
-        // other data...
+        
     ]);
 }
 

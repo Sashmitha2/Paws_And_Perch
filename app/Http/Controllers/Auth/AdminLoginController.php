@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+  use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +15,8 @@ class AdminLoginController extends Controller
 
     }
 
-    public function store(Request $request)
-    {
+    // public function store(Request $request)
+    // {
 
         // $request->validate([
         //     'email' => 'required|email',
@@ -64,26 +65,56 @@ class AdminLoginController extends Controller
 
         // return response()->json(['message' => 'Invalid credentials'], 401);
 
-        $credentials = $request->validate([
+    //     $credentials = $request->validate([
+    //     'email' => 'required|email',
+    //     'password' => 'required',
+    // ]);
+
+    // if (Auth::attempt($credentials)) {
+    //     $user = Auth::user();
+    // $token = $user->createToken('admin-token')->plainTextToken;
+
+    // session(['api_token' => $token]);
+    //     //$request->session()->regenerate();
+
+    //     return redirect()->intended('/admin/dashboard');
+    // }
+
+    // return back()->withErrors([
+    //     'email' => 'The provided credentials do not match our records.',
+    // ]);
+
+    // }
+
+  
+
+public function store(Request $request)
+{
+    $credentials = $request->validate([ 
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
-    $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('admin-token')->plainTextToken;
 
-    session(['api_token' => $token]);
-        //$request->session()->regenerate();
+        session(['api_token' => $token]);
+
+        // ✅ Flash success message to session
+        Session::flash('success', 'Login successful!');
 
         return redirect()->intended('/admin/dashboard');
     }
 
+    // ❌ Flash error message to session
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
-    ]);
+    ])->withInput()->with('error', 'Invalid login credentials.');
+}
 
-    }
+
+
 
     public function destroy( Request $request)
     {

@@ -73,6 +73,7 @@ class CatProducts extends Component
             $cartItem->save();
         } else {
             CartItem::create([
+                'user_id' => auth()->id(),
                 'cart_id' => $this->cart->id,
                 'product_id' => $productId,
                 'quantity' => 1,
@@ -80,6 +81,12 @@ class CatProducts extends Component
         }
 
         session()->flash('success', 'Product added to cart!');
+
+    //      $this->dispatch('cart-message', [
+    //     'type' => 'success',
+    //     'message' => 'Product added to cart!'
+    // ]);
+
     }
 
     public function render()

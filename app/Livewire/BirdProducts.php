@@ -79,6 +79,7 @@ class BirdProducts extends Component
             $cartItem->save();
         } else {
             CartItem::create([
+                'user_id' => auth()->id(),
                 'cart_id' => $this->cart->id,
                 'product_id' => $productId,
                 'quantity' => 1,

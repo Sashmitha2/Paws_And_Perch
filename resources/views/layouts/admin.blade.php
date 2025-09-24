@@ -21,11 +21,10 @@
         
     </head>
     <body class="font-sans antialiased">
-        @include('partials.navigation')
         <x-banner />
 
         <div class="min-h-screen bg-gray-100">
-           {{--@livewire('navigation-menu') --}}
+            @livewire('admin-navigation-menu')
 
             <!-- Page Heading -->
             @if (isset($header))
