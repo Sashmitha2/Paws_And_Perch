@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-    //     Schema::table('cart_items', function (Blueprint $table) {
-    //     $table->foreignId('user_id')->constrained()->cascadeOnDelete()->after('id');
-    // });
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('otp_code')->nullable();
+        $table->timestamp('otp_expires_at')->nullable();
+    });
+    
     }
 
     /**
@@ -21,9 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        $table->dropColumn('user_id');
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 };

@@ -15,7 +15,7 @@
     @if($orders->isEmpty())
       <div class="text-center text-gray-600 py-10">
         <p class="text-xl">You haven't placed any orders yet.</p>
-        <a href="{{ url('/') }}" class="mt-4 inline-block text-indigo-600 font-semibold hover:underline">
+        <a href="{{ url('/home') }}" class="mt-4 inline-block text-indigo-600 font-semibold hover:underline">
           Go to Shop
         </a>
       </div>
@@ -62,6 +62,13 @@
       @endforeach
     @endif
   </div>
+
+  <a href="{{route('home')}}" 
+           class="inline-block px-8 py-3 rounded-full bg-indigo-600 text-white font-semibold
+                  hover:bg-indigo-700 transition shadow-lg
+                  focus:outline-none focus:ring-4 focus:ring-indigo-300">
+            Back to Home
+        </a>
 
 </body>
 </html>

@@ -2,92 +2,110 @@
 
 namespace App\Http\Controllers;
 
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-
-
+    /**
+     * Handle customer login & send OTP.
+     */
     public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    // Attempt login
-    if (!Auth::guard('customer')->attempt($credentials)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Invalid login credentials');
+        // ✅ Just validate credentials — don't log in yet
+        if (!Auth::guard('customer')->validate($credentials)) {
+            return back()->withInput()->with('error', 'Invalid login credentials.');
+        }
+
+        // ✅ Fetch user and role check
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user || $user->role !== 'Customer') {
+            return back()->withInput()->with('error', 'Access denied: Only customers can log in.');
+        }
+
+        // ✅ Generate OTP
+        $otp = rand(100000, 999999);
+
+        // ✅ Store OTP in session
+        session([
+            'otp_user_id' => $user->id,
+            'otp_code' => $otp,
+            'otp_expires_at' => now()->addMinutes(5),
+        ]);
+
+        // ✅ Log & send OTP
+        Log::info("OTP for {$user->email}: {$otp}");
+
+        Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
+            $message->to($user->email)->subject('Your OTP Code');
+        });
+
+        // ✅ Redirect to OTP input form
+        return redirect()->route('otp.verify');
     }
 
-    $user = Auth::guard('customer')->user();
-
-    if ($user->role !== 'Customer') {
-        Auth::guard('customer')->logout();
-
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Access denied: Only customers can log in here.');
+    /**
+     * Show OTP verification form.
+     */
+    public function showOtpForm()
+    {
+        return view('auth.verify-otp'); // Make sure this Blade file exists
     }
 
-    $request->session()->regenerate();
+    /**
+     * Handle OTP verification & login.
+     */
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|numeric',
+        ]);
 
-    return redirect()->intended('/home');
-}
+        $expectedOtp = session('otp_code');
+        $userId = session('otp_user_id');
+        $expiresAt = session('otp_expires_at');
 
+        // Session check
+        if (!$userId || !$expectedOtp || now()->gt($expiresAt)) {
+            session()->forget(['otp_code', 'otp_user_id', 'otp_expires_at']);
+            return redirect()->route('login')->with('error', 'OTP session expired. Please login again.');
+        }
 
-//     public function login(Request $request)
-//     {
-//         $request->validate([
-//             'email' => 'required|email',
-//             'password' => 'required',
+        // Invalid OTP
+        if ($request->otp != $expectedOtp) {
+            return back()->with('error', 'Invalid OTP.');
+        }
 
-//         ]);
+        // ✅ OTP is correct → log user in
+        $user = User::find($userId);
+        Auth::guard('customer')->login($user);
+        $request->session()->regenerate(); // Prevent session fixation
 
-//         //if (!Auth::attempt($request->only('email', 'password'))) {
-//           //  return response()->json(['message'=>'Invalid login credentials'], 401);
+        // Clear OTP from session
+        session()->forget(['otp_code', 'otp_user_id', 'otp_expires_at']);
 
-//         if (!Auth::attempt($request->only('email', 'password'))) {
-//     return redirect()->back()
-//         ->withInput()
-//         ->with('error', 'Invalid login credentials');
-// }
+        return redirect()->intended('/home'); // Authenticated area
+    }
 
-            
-        
-
-//         /** @var \App\Models\User $user **/
-//         $user = Auth::user();
-//         $token = $user->createToken('api_token')->plainTextToken;
-
-//         return response()->json([
-//             'message'=>'Login successful',
-//             'token'=> $token,
-//             'user'=> $user,
-//         ]);
-
-//     }
-
-    // public function logout(Request $request)
-    // {
-    //     $request->user()->currentAccessToken()->delete();
-        
-    //     return response()->json(['message' => 'Logged out successfully']);
-    // }
-
+    /**
+     * Log the user out of the session.
+     */
     public function logout(Request $request)
     {
-        auth()->logout();  // Log the user out of the session
+        Auth::guard('customer')->logout(); // Logout from customer guard
 
-        $request->session()->invalidate();  // Invalidate the session
-        $request->session()->regenerateToken();  // Regenerate CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return redirect()->route('login');  // Redirect to customer login page
+        return redirect()->route('login')->with('message', 'Logged out successfully.');
     }
-
 }

@@ -7,13 +7,16 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;  // Assuming you have a Product model for MySQL
 use App\Models\Review;
+use MongoDB\BSON\ObjectId;
+
 
 class ReviewComponent extends Component
 {
 
     use WithFileUploads;
 
-  
+   public $showEditModal = false;
+
     public $reviews; // all reviews for this product
     public $rating;
     public $comment;
@@ -60,50 +63,138 @@ class ReviewComponent extends Component
         session()->flash('message', 'Review added successfully!');
     }
 
+    // public function editReview($id)
+    // {
+    //     $review = Review::find($id);
+
+    //     if ($review && $review->user_id == Auth::id()) {
+    //         $this->reviewId = $id;
+    //         $this->rating = $review->rating;
+    //         $this->comment = $review->comment;
+    //         $this->editMode = true;
+    //     } else {
+    //         session()->flash('error', 'Unauthorized action.');
+    //     }
+    // }
+
     public function editReview($id)
-    {
-        $review = Review::find($id);
+{
+    $review = Review::where('_id', new ObjectId($id))->first();
 
-        if ($review && $review->user_id == Auth::id()) {
-            $this->reviewId = $id;
-            $this->rating = $review->rating;
-            $this->comment = $review->comment;
-            $this->editMode = true;
-        } else {
-            session()->flash('error', 'Unauthorized action.');
-        }
+    if ($review && $review->user_id == Auth::id()) {
+        $this->reviewId = (string) $review->_id;
+        $this->rating = $review->rating;
+        $this->comment = $review->comment;
+        $this->editMode = true;
+        $this->showEditModal = true; // Open modal
+    } else {
+        session()->flash('error', 'Unauthorized action.');
     }
+}
 
-    public function updateReview()
-    {
-        $this->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:1000',
-            'image' => 'nullable|image|max:2048',
-        ]);
 
-        $review = Review::find($this->reviewId);
+    // public function updateReview()
+    // {
+    //     $this->validate([
+    //         'rating' => 'required|integer|min:1|max:5',
+    //         'comment' => 'required|string|max:1000',
+    //         'image' => 'nullable|image|max:2048',
+    //     ]);
 
-        if ($review && $review->user_id == Auth::id()) {
-            if ($this->image) {
-                $imagePath = $this->image->store('reviews', 'public');
-                $review->image = $imagePath;
-            }
+    //     $review = Review::find($this->reviewId);
 
-            $review->rating = $this->rating;
-            $review->comment = $this->comment;
-            $review->updated_at = now();
-            $review->save();
+    //     if ($review && $review->user_id == Auth::id()) {
+    //         if ($this->image) {
+    //             $imagePath = $this->image->store('reviews', 'public');
+    //             $review->image = $imagePath;
+    //         }
 
-            $this->reset(['rating', 'comment', 'image', 'reviewId']);
-            $this->editMode = false;
-            $this->loadReviews();
+    //         $review->rating = $this->rating;
+    //         $review->comment = $this->comment;
+    //         $review->updated_at = now();
+    //         $review->save();
 
-            session()->flash('message', 'Review updated successfully!');
-        } else {
-            session()->flash('error', 'Unauthorized action.');
+    //         $this->reset(['rating', 'comment', 'image', 'reviewId']);
+    //         $this->editMode = false;
+    //         $this->loadReviews();
+
+    //         session()->flash('message', 'Review updated successfully!');
+    //     } else {
+    //         session()->flash('error', 'Unauthorized action.');
+    //     }
+    // }
+
+//     public function updateReview()
+// {
+//     $this->validate([
+//         'rating' => 'required|integer|min:1|max:5',
+//         'comment' => 'required|string|max:1000',
+//         'image' => 'nullable|image|max:2048',
+//     ]);
+
+//     $objectId = new ObjectId($this->reviewId);
+
+//     $review = Review::where('_id', $objectId)->first();
+
+//     if ($review && $review->user_id == Auth::id()) {
+//         if ($this->image) {
+//             $imagePath = $this->image->store('reviews', 'public');
+//             $review->image = $imagePath;
+//         }
+
+//         $review->rating = $this->rating;
+//         $review->comment = $this->comment;
+//         $review->updated_at = now();
+//         $review->save();
+
+//         $this->reset(['rating', 'comment', 'image', 'reviewId']);
+//         $this->editMode = false;
+//         $this->loadReviews();
+
+//         session()->flash('message', 'Review updated successfully!');
+//     } else {
+//         session()->flash('error', 'Unauthorized action or review not found.');
+//     }
+// }
+
+public function updateReview()
+{
+    $this->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'required|string|max:1000',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    $objectId = new ObjectId($this->reviewId);
+
+    $review = Review::where('_id', $objectId)->first();
+
+    if ($review && $review->user_id == Auth::id()) {
+        $updateData = [
+            'rating' => $this->rating,
+            'comment' => $this->comment,
+            'updated_at' => now(),
+        ];
+
+        if ($this->image) {
+            $imagePath = $this->image->store('reviews', 'public');
+            $updateData['image'] = $imagePath;
         }
+
+        Review::where('_id', $objectId)->update($updateData);
+
+        $this->reset(['rating', 'comment', 'image', 'reviewId']);
+        $this->editMode = false;
+        $this->loadReviews();
+
+        session()->flash('message', 'Review updated successfully!');
+        $this->showEditModal = false;
+
+    } else {
+        session()->flash('error', 'Unauthorized action or review not found.');
     }
+}
+
 
     public function deleteReview($id)
     {

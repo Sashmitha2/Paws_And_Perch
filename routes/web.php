@@ -14,6 +14,7 @@ use App\Livewire\CatProducts;
 use App\Livewire\BirdProducts;
 use App\Livewire\AdminProductManager;
 use App\Livewire\Admin\Orders;
+use App\Http\Controllers\Auth\OTPController;
 
 Route::get('/', function () {
     return view('auth.select-role');
@@ -29,15 +30,25 @@ Route::get('test',function (){
 Route::get('/api/products', [ProductController::class, 'index']);
 
 
+Route::get('/login', function () {
+    return view('auth.login'); // or your login Blade file
+})->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/home', HomePage::class)->name('home');
+// });
+
+Route::middleware(['auth:customer'])->group(function () {
     Route::get('/home', HomePage::class)->name('home');
 });
+
 
 Route::middleware('auth:admin')->group(function() {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -109,3 +120,7 @@ Route::get('/reviews', ReviewComponent::class)->name('reviews');
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/orders', Orders::class)->name('admin.orders');
 });
+
+
+Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.verify');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.check');

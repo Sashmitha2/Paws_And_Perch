@@ -59,7 +59,7 @@
                         @if($product->image)
                             <img 
                                 src="{{ asset('storage/' . $product->image) }}" 
-                                alt="{{ $product->product_name }}" 
+                                alt="{{ $product->product_name ?? 'Default Name' }}" 
                                 class="rounded-xl mb-4 w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                             >
                         @else
@@ -71,7 +71,7 @@
                         {{-- Product Details --}}
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 font-[Playfair Display] group-hover:text-blue-600 transition">
-                                {{ $product->product_name }}
+                                {{ $product->product_name ?? 'Default Name'}}
                             </h3>
 
                             <p class="text-sm text-gray-500 mt-1">
