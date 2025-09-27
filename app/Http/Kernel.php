@@ -19,6 +19,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+
+    protected $routeMiddleware = [
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+];
+
 }
 
 

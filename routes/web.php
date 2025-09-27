@@ -13,6 +13,7 @@ use App\Livewire\DogProducts;
 use App\Livewire\CatProducts;
 use App\Livewire\BirdProducts;
 use App\Livewire\AdminProductManager;
+use App\Livewire\Admin\Orders;
 
 Route::get('/', function () {
     return view('auth.select-role');
@@ -38,15 +39,16 @@ Route::middleware([
     Route::get('/home', HomePage::class)->name('home');
 });
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth:admin')->group(function() {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
 });
 
-Route::middleware('guest')->group(function () {
+//Route::middleware('guest')->group(function () {
     Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin.login');
     Route::post('/admin/login', [AdminLoginController::class, 'store']);
-});
+//});
+
 
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -70,7 +72,7 @@ Route::get('/cart', \App\Livewire\CartPage::class)->name('cart.index');
 
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/products', AdminProductManager::class)->name('admin.products');
 });
 
@@ -93,13 +95,17 @@ Route::get('/my-orders', [OrderController::class, 'viewOrders'])->name('orders.i
 
 Route::get('/reviews', ReviewComponent::class)->name('reviews');
 
-Route::get('/test-mongo-connection', function () {
-    $review = Review::create([
-        'user_id' => 99,
-        'rating' => 5,
-        'comment' => 'Test review from Laravel app',
-        'image' => null,
-    ]);
+// Route::get('/test-mongo-connection', function () {
+//     $review = Review::create([
+//         'user_id' => 99,
+//         'rating' => 5,
+//         'comment' => 'Test review from Laravel app',
+//         'image' => null,
+//     ]);
 
-    return 'Saved review with ID: ' . $review->_id;
+//     return 'Saved review with ID: ' . $review->_id;
+// });
+
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/admin/orders', Orders::class)->name('admin.orders');
 });

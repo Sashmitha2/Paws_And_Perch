@@ -11,6 +11,11 @@ class AdminLoginController extends Controller
 {
     public function create()
     {
+        if (Auth::check() && Auth::user()->role === 'Customer') {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+    }
         return view('auth.admin-login'); // blade view for admin
 
     }
@@ -88,26 +93,94 @@ class AdminLoginController extends Controller
 
   
 
+// public function store(Request $request)
+// {
+//     $credentials = $request->validate([ 
+//         'email' => 'required|email',
+//         'password' => 'required',
+//     ]);
+
+//     if (Auth::attempt($credentials)) {
+//         $user = Auth::user();
+//         $token = $user->createToken('admin-token')->plainTextToken;
+
+//         session(['api_token' => $token]);
+
+//         // ✅ Flash success message to session
+//         Session::flash('success', 'Login successful!');
+
+//         return redirect()->intended('/admin/dashboard');
+//     }
+
+//     // ❌ Flash error message to session
+//     return back()->withErrors([
+//         'email' => 'The provided credentials do not match our records.',
+//     ])->withInput()->with('error', 'Invalid login credentials.');
+// }
+
+// public function store(Request $request)
+// {
+//     $credentials = $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required',
+//     ]);
+
+//     if (Auth::attempt($credentials)) {
+//         $user = Auth::user();
+
+//         // ✅ Check if the user is actually an admin
+//         if ($user->role !== 'Admin') {
+//             Auth::logout(); // log out the unauthorized user
+//             return back()->withErrors([
+//                 'email' => 'Unauthorized login attempt.',
+//             ])->withInput()->with('error', 'You are not allowed to access the admin panel.');
+//         }
+
+//         // ✅ Create Sanctum token (if needed)
+//         $token = $user->createToken('admin-token')->plainTextToken;
+//         session(['api_token' => $token]);
+
+//         // ✅ Flash success message
+//         Session::flash('success', 'Login successful!');
+
+//         //return redirect()->intended('/admin/dashboard');
+
+//         return redirect()->route('admin.dashboard');
+
+//     }
+
+//     // ❌ Invalid credentials
+//     return back()->withErrors([
+//         'email' => 'The provided credentials do not match our records.',
+//     ])->withInput()->with('error', 'Invalid login credentials.');
+// }
+
 public function store(Request $request)
 {
-    $credentials = $request->validate([ 
+    $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        $token = $user->createToken('admin-token')->plainTextToken;
+    if (Auth::guard('admin')->attempt($credentials)) {
+        $user = Auth::guard('admin')->user();
 
+        if ($user->role !== 'Admin') {
+            Auth::guard('admin')->logout();
+
+            return back()->withErrors([
+                'email' => 'Unauthorized login attempt.',
+            ])->withInput()->with('error', 'You are not allowed to access the admin panel.');
+        }
+
+        $token = $user->createToken('admin-token')->plainTextToken;
         session(['api_token' => $token]);
 
-        // ✅ Flash success message to session
         Session::flash('success', 'Login successful!');
 
-        return redirect()->intended('/admin/dashboard');
+        return redirect()->route('admin.dashboard');
     }
 
-    // ❌ Flash error message to session
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ])->withInput()->with('error', 'Invalid login credentials.');
@@ -118,7 +191,7 @@ public function store(Request $request)
 
     public function destroy( Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

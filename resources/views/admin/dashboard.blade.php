@@ -1,181 +1,340 @@
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <h1> Welcome to the Admin Dashboard</h1>
-        </h2>
-    </x-slot>
-</x-app-layout> --}}
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-<!-- resources/views/admin/dashboard.blade.php -->
+  <title>Admin Dashboard • Paws & Perch</title>
 
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+    rel="stylesheet"
+  />
 
-<div class="min-h-screen bg-gray-100 flex">
+  <!-- Tailwind and styles -->
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg">
-        <div class="p-6">
-            <h2 class="text-2xl font-bold text-gray-800">Admin Panel</h2>
-        </div>
-        <nav class="mt-6">
-            <a href="{{ route('admin.dashboard') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-200' : '' }}">
-                🏠 Dashboard
-            </a>
-            <a href="{{ route('admin.products') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.products*') ? 'bg-gray-200' : '' }}">
-                📦 Products
-            </a>
-            {{--<a href="{{ route('admin.orders') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.orders*') ? 'bg-gray-200' : '' }}">
-                🛒 Orders
-            </a>
-            <a href="{{ route('admin.users') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.users*') ? 'bg-gray-200' : '' }}">
-                👤 Users
-            </a> --}}
-            {{--<a href="{{ route('admin.reports') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.reports*') ? 'bg-gray-200' : '' }}">
-                📊 Reports
-            </a>
-            <a href="{{ route('admin.settings') }}" class="block px-6 py-3 text-gray-700 hover:bg-gray-200 {{ request()->routeIs('admin.settings*') ? 'bg-gray-200' : '' }}">
-                ⚙️ Settings
-            </a> --}}
-        </nav>
+  <style>
+    .hover-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+    .bg-glass {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+
+  @livewireStyles
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-800">
+
+  {{-- Nav / Banner --}}
+  <div class="w-full bg-white shadow-sm sticky top-0 z-30">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between"
+    >
+      <div class="flex items-center space-x-4">
+        <!-- Sidebar toggle button (mobile) -->
+        <button
+          id="sidebarToggle"
+          aria-label="Toggle Sidebar"
+          class="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <svg
+            class="h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+        <h1 class="text-2xl lobster-font font-bold text-gray-800 select-none">🐾 Paws & Perch</h1>
+      </div>
+
+      <!-- Settings Dropdown -->
+      <div class="relative">
+        <x-dropdown align="right" width="48">
+          <x-slot name="trigger">
+            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+            <button
+              class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition"
+            >
+              <img
+                class="h-8 w-8 rounded-full object-cover"
+                src="{{ Auth::user()->profile_photo_url }}"
+                alt="{{ Auth::user()->name }}"
+              />
+            </button>
+            @else
+            <span class="inline-flex rounded-md">
+              <button
+                type="button"
+                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
+              >
+                {{ Auth::user()->name }}
+                <svg
+                  class="ml-2 -mr-0.5 h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </button>
+            </span>
+            @endif
+          </x-slot>
+
+          <x-slot name="content">
+            <div class="block px-4 py-2 text-xs text-gray-400">Manage Account</div>
+            <x-dropdown-link href="{{ route('profile.show') }}">Profile</x-dropdown-link>
+            <div class="border-t border-gray-200"></div>
+            <form method="POST" action="{{ route('admin.logout') }}" x-data>
+              @csrf
+              <x-dropdown-link
+                href="{{ route('admin.logout') }}"
+                @click.prevent="$root.submit();"
+              >
+                Log Out
+              </x-dropdown-link>
+            </form>
+          </x-slot>
+        </x-dropdown>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="flex min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 gap-8"
+  >
+    {{-- Sidebar --}}
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 w-64 bg-white bg-glass rounded-r-2xl p-6 shadow-lg z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+      aria-label="Sidebar Navigation"
+    >
+      <div class="mb-10">
+        <h2 class="text-3xl font-semibold">Admin Panel</h2>
+      </div>
+      <nav class="space-y-4" role="navigation">
+        <a
+          href="{{ route('admin.dashboard') }}"
+          class="block py-3 px-4 rounded-lg hover:bg-gray-100 transition hover-item {{ request()->routeIs('admin.dashboard') ? 'bg-gray-100 font-semibold' : '' }}"
+          >Dashboard</a
+        >
+        <a
+          href="{{ route('admin.products') }}"
+          class="block py-3 px-4 rounded-lg hover:bg-gray-100 transition hover-item {{ request()->routeIs('admin.products*') ? 'bg-gray-100 font-semibold' : '' }}"
+          >Products</a
+        >
+        <a
+          href="{{ route('admin.orders') }}"
+          class="block py-3 px-4 rounded-lg hover:bg-gray-100 transition hover-item {{ request()->routeIs('admin.orders*') ? 'bg-gray-100 font-semibold' : '' }}"
+          >Orders</a
+        >
+      </nav>
     </aside>
 
-    <!-- Main content -->
-    <div class="flex-1 flex flex-col">
+    {{-- Main Content --}}
+    <main
+      class="flex-1 flex flex-col space-y-8 lg:ml-64"
+      aria-live="polite"
+      tabindex="-1"
+    >
+      {{-- Hero / Header --}}
+      <header
+        class="bg-white rounded-2xl px-6 py-6 shadow hover-item transition sm:px-8"
+      >
+        <h1 class="text-3xl sm:text-4xl font-bold">Welcome, Admin</h1>
+        <p class="mt-2 text-gray-600 text-sm sm:text-base">
+          Here’s what’s happening with your store today.
+        </p>
+      </header>
 
-        <!-- Header -->
-        <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-semibold text-gray-800">Dashboard</h1>
-            <div class="flex items-center space-x-4">
-                <!-- Quick actions -->
-                {{-- <a href="{{ route('admin.products.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    + New Product
-                </a>
-                <a href="{{ route('admin.orders') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                    View Orders
-                </a> --}}
-            </div>
-        </header>
-
-        <!-- Metrics Cards -->
-        {{--<div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white shadow rounded-lg p-5">
-                <div class="text-sm font-medium text-gray-500">Total Users</div>
-                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $totalUsers }}</div>
-            </div>
-            <div class="bg-white shadow rounded-lg p-5">
-                <div class="text-sm font-medium text-gray-500">Total Orders</div>
-                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $totalOrders }}</div>
-            </div>
-            <div class="bg-white shadow rounded-lg p-5">
-                <div class="text-sm font-medium text-gray-500">Revenue (Last 30 days)</div>
-                <div class="mt-1 text-3xl font-semibold text-gray-900">${{ $revenueLast30 }}</div>
-            </div>
-            <div class="bg-white shadow rounded-lg p-5">
-                <div class="text-sm font-medium text-gray-500">Products Low in Stock</div>
-                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $lowStockCount }}</div>
-            </div>
-        </div> --}}
-
-        <!-- Charts & Recent Orders Section -->
-        <div class="p-6 space-y-6 flex-1 overflow-y-auto">
-
-            <!-- Sales Chart -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Sales Trend (Last 7 Days)</h2>
-                <!-- Here you can insert a chart, e.g. using Chart.js -->
-                <canvas id="salesChart" class="w-full h-48"></canvas>
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Orders</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr class="bg-gray-50">
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3"></th>
-                            </tr>
-                        </thead>
-                        {{--<tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($recentOrders as $order)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${{ $order->total }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if($order->status == 'pending') bg-yellow-100 text-yellow-800 
-                                            @elseif($order->status == 'completed') bg-green-100 text-green-800 
-                                            @elseif($order->status == 'cancelled') bg-red-100 text-red-800 
-                                            @else bg-gray-100 text-gray-800 @endif">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->created_at->format('M d, Y') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                        <a href="{{ route('admin.orders.show', $order->id) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody> --}}
-                    </table>
-
-                    {{--@if($recentOrders->isEmpty())
-                        <p class="text-gray-500">No recent orders</p>
-                    @endif--}}
-                </div>
-            </div>
-
+      {{-- Metrics Grid --}}
+      <section
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        aria-label="Key Metrics"
+      >
+        <div
+          class="bg-white rounded-2xl p-6 shadow hover-item transition text-center"
+        >
+          <div class="text-sm font-medium uppercase text-gray-500">
+            Total Users
+          </div>
+          <div class="mt-4 text-3xl font-bold">1,234</div>
         </div>
+        <div
+          class="bg-white rounded-2xl p-6 shadow hover-item transition text-center"
+        >
+          <div class="text-sm font-medium uppercase text-gray-500">
+            Total Orders
+          </div>
+          <div class="mt-4 text-3xl font-bold">567</div>
+        </div>
+        <div
+          class="bg-white rounded-2xl p-6 shadow hover-item transition text-center"
+        >
+          <div class="text-sm font-medium uppercase text-gray-500">
+            Revenue (30d)
+          </div>
+          <div class="mt-4 text-3xl font-bold">Rs.12,345</div>
+        </div>
+        <div
+          class="bg-white rounded-2xl p-6 shadow hover-item transition text-center"
+        >
+          <div class="text-sm font-medium uppercase text-gray-500">Low Stock</div>
+          <div class="mt-4 text-3xl font-bold">5 Items</div>
+        </div>
+      </section>
 
-        <!-- Footer -->
-        <footer class="bg-white border-t mt-auto py-4 px-6">
-            <div class="flex justify-between text-sm text-gray-500">
-                <span>© {{ date('Y') }} Paws & Perch Admin. All rights reserved.</span>
-                {{--<div>
-                    <a href="{{ route('admin.settings') }}" class="hover:underline">Settings</a>
-                    <span class="mx-2">|</span>
-                    <a href="{{ route('admin.profile') }}" class="hover:underline">Profile</a>
-                </div>--}}
-            </div>
-        </footer>
+      {{-- Chart Section --}}
+      <section
+        class="bg-white rounded-2xl p-6 shadow hover-item transition"
+        aria-label="Sales Trend Chart"
+      >
+        <h2 class="text-2xl font-semibold mb-4">Sales Trend</h2>
+        <div class="overflow-x-auto">
+          <canvas id="salesChart" class="w-full h-64 min-w-[320px]"></canvas>
+        </div>
+      </section>
 
-    </div>
-</div>
+      {{-- Recent Orders --}}
+      <section
+        class="bg-white rounded-2xl p-6 shadow hover-item transition"
+        aria-label="Recent Orders"
+      >
+        <h2 class="text-2xl font-semibold mb-4">Recent Orders</h2>
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-full table-auto divide-y divide-gray-200 text-sm"
+          >
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left uppercase font-medium text-gray-500"
+                >
+                  Order #
+                </th>
+                <th
+                  class="px-6 py-3 text-left uppercase font-medium text-gray-500"
+                >
+                  Customer
+                </th>
+                <th
+                  class="px-6 py-3 text-left uppercase font-medium text-gray-500"
+                >
+                  Total
+                </th>
+                <th
+                  class="px-6 py-3 text-left uppercase font-medium text-gray-500"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-3 text-left uppercase font-medium text-gray-500"
+                >
+                  Date
+                </th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 bg-white">
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4">#1001</td>
+                <td class="px-6 py-4">Jane Doe</td>
+                <td class="px-6 py-4 font-semibold">$120.00</td>
+                <td class="px-6 py-4">
+                  <span
+                    class="px-3 py-1 inline-block text-xs font-semibold rounded-full text-yellow-800 bg-yellow-100"
+                    >Pending</span
+                  >
+                </td>
+                <td class="px-6 py-4 text-gray-500">Sep 26, 2025</td>
+                <td class="px-6 py-4 text-right">
+                  <a href="#" class="text-indigo-600 hover:underline">View</a>
+                </td>
+              </tr>
+              {{-- more rows --}}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-<!-- Include Chart.js or your preferred chart library script -->
-{{--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>--}}
+      {{-- Footer --}}
+      <footer class="text-gray-500 text-center py-6">
+        © {{ date('Y') }} Paws & Perch. All rights reserved.
+      </footer>
+    </main>
+  </div>
 
-<script>
-    window.apiToken = @json(session('api_token'));
-</script>
+  <script>window.apiToken = @json(session('api_token'));</script>
 
-{{--<script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
     const ctx = document.getElementById('salesChart').getContext('2d');
     const salesChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($salesLast7DaysLabels) !!},
-            datasets: [{
-                label: 'Sales',
-                data: {!! json_encode($salesLast7DaysData) !!},
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                fill: true,
-                tension: 0.3
-            }]
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [
+          {
+            label: 'Sales',
+            data: [100, 150, 120, 180, 170, 140, 200],
+            borderColor: '#6366F1',
+            backgroundColor: 'rgba(99,102,241,0.2)',
+            fill: true,
+            tension: 0.4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true },
         },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
+      },
     });
-</script> --}}
+
+    // Sidebar toggle script
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+
+    // Optional: close sidebar when clicking outside on mobile
+    window.addEventListener('click', (e) => {
+      if (
+        !sidebar.contains(e.target) &&
+        !sidebarToggle.contains(e.target) &&
+        !sidebar.classList.contains('-translate-x-full') &&
+        window.innerWidth < 1024
+      ) {
+        sidebar.classList.add('-translate-x-full');
+      }
+    });
+  </script>
+
+  @livewireScripts
+</body>
+</html>

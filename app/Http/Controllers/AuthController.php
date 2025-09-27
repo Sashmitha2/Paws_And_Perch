@@ -9,37 +9,69 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        ]);
+    // Attempt login
+    if (!Auth::guard('customer')->attempt($credentials)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Invalid login credentials');
+    }
 
-        //if (!Auth::attempt($request->only('email', 'password'))) {
-          //  return response()->json(['message'=>'Invalid login credentials'], 401);
+    $user = Auth::guard('customer')->user();
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-    return redirect()->back()
-        ->withInput()
-        ->with('error', 'Invalid login credentials');
+    if ($user->role !== 'Customer') {
+        Auth::guard('customer')->logout();
+
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Access denied: Only customers can log in here.');
+    }
+
+    $request->session()->regenerate();
+
+    return redirect()->intended('/home');
 }
+
+
+//     public function login(Request $request)
+//     {
+//         $request->validate([
+//             'email' => 'required|email',
+//             'password' => 'required',
+
+//         ]);
+
+//         //if (!Auth::attempt($request->only('email', 'password'))) {
+//           //  return response()->json(['message'=>'Invalid login credentials'], 401);
+
+//         if (!Auth::attempt($request->only('email', 'password'))) {
+//     return redirect()->back()
+//         ->withInput()
+//         ->with('error', 'Invalid login credentials');
+// }
 
             
         
 
-        /** @var \App\Models\User $user **/
-        $user = Auth::user();
-        $token = $user->createToken('api_token')->plainTextToken;
+//         /** @var \App\Models\User $user **/
+//         $user = Auth::user();
+//         $token = $user->createToken('api_token')->plainTextToken;
 
-        return response()->json([
-            'message'=>'Login successful',
-            'token'=> $token,
-            'user'=> $user,
-        ]);
+//         return response()->json([
+//             'message'=>'Login successful',
+//             'token'=> $token,
+//             'user'=> $user,
+//         ]);
 
-    }
+//     }
 
     // public function logout(Request $request)
     // {

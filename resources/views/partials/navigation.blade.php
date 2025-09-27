@@ -2,7 +2,7 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center">
             <div class="flex">
                 <!-- Logo and Brand -->
                 <div class="shrink-0 flex items-center">
@@ -13,7 +13,19 @@
             </div>
 
             <!-- Desktop Navigation Right Side -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
+                        <!-- Centered Links -->
+            <div class="hidden sm:flex flex-grow justify-center space-x-8">
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Home</a>
+                <a href="{{ route('products.dogs', ['parentCategoryId' => 1]) }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Dog</a>
+                <a href="{{ route('products.cats', ['parentCategoryId' => 2]) }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Cat</a>
+                <a href="{{ route('products.birds', ['parentCategoryId' => 3]) }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Bird</a>
+                <a href="{{ route('reviews') }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Reviews</a>
+            </div>
+
+            <!-- Right Side: Cart Icon and Settings -->
+            <div class="hidden sm:flex sm:items-center space-x-4">
+
+
                 <!-- Cart Icon Component -->
                 @livewire('cart-icon')
 

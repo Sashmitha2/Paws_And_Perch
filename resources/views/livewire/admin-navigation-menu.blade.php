@@ -1,21 +1,24 @@
-
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo and Brand -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}">
-                        <h1 class="text-2xl lobster-font font-bold text-gray-800">🐾 Paws & Perch</h1>
-                    </a>
-                </div>
+        <div class="flex justify-between h-16 items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Left: Logo -->
+            <div class="flex shrink-0 items-center">
+                <h1 class="text-2xl lobster-font font-bold text-gray-800">🐾 Paws & Perch</h1>
             </div>
 
-            <!-- Desktop Navigation Right Side -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
+            <!-- Center: Navigation Links -->
+            <div class="hidden sm:flex flex-1 justify-center space-x-6 items-center">
+                <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Dashboard</a>
+                <a href="{{ route('admin.products') }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Products</a>
+                <a href="{{ route('admin.orders') }}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Orders</a>
+            </div>
+
+            <!-- Right: Cart Icon and User Dropdown -->
+            <div class="hidden sm:flex items-center space-x-4">
                 <!-- Cart Icon Component -->
-                @livewire('cart-icon')
+               
 
                 <!-- Settings Dropdown -->
                 <div class="ms-3 relative">

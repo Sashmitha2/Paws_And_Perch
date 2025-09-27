@@ -274,6 +274,8 @@
 
             <!-- Desktop Navigation Right Side -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
+                
+
                 <!-- Cart Icon Component -->
                 @livewire('cart-icon')
 
