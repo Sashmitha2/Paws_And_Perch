@@ -1,4 +1,7 @@
+
+
 <x-guest-layout>
+
     <div 
         class="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat py-12 px-6"
         style="background-image: url('{{ asset('images/bac.jpg') }}');"
@@ -125,3 +128,5 @@
     </div>
 </x-guest-layout> 
 
+
+</html>
