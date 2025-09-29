@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Mail\CustomerOtpMail;
+
 
 class AuthController extends Controller
 {
@@ -45,9 +47,11 @@ class AuthController extends Controller
         // ✅ Log & send OTP
         Log::info("OTP for {$user->email}: {$otp}");
 
-        Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
-            $message->to($user->email)->subject('Your OTP Code');
-        });
+        // Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
+        //     $message->to($user->email)->subject('Your OTP Code');
+        // });
+
+        Mail::to($user->email)->send(new CustomerOtpMail($otp));
 
         // ✅ Redirect to OTP input form
         return redirect()->route('otp.verify');
