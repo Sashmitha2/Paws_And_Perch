@@ -31,34 +31,31 @@ Route::get('/api/products', [ProductController::class, 'index']);
 
 
 Route::get('/login', function () {
-    return view('auth.login'); // or your login Blade file
+    return view('auth.login'); 
 })->name('login');
+
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 
-// Route::middleware([
-//     'auth:sanctum',
-//     config('jetstream.auth_session'),
-//     'verified',
-// ])->group(function () {
-//     Route::get('/home', HomePage::class)->name('home');
-// });
 
 Route::middleware(['auth:customer'])->group(function () {
-    Route::get('/home', HomePage::class)->name('home');
+   
 });
 
 
 Route::middleware('auth:admin')->group(function() {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+     Route::get('/admin/products', AdminProductManager::class)->name('admin.products');
+
+      Route::get('/admin/orders', Orders::class)->name('admin.orders');
 });
 
-//Route::middleware('guest')->group(function () {
+
     Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin.login');
     Route::post('/admin/login', [AdminLoginController::class, 'store']);
-//});
+
 
 
 
@@ -71,56 +68,30 @@ Route::get('/select-role', function () {
 
 
  
+Route::middleware(['auth:customer'])->group(function(){
 
-Route::get('/products/dogs/{parentCategoryId}', DogProducts::class)->name('products.dogs');
-//Route::get('/products/cats', CatProducts::class)->name('products.cats');
+    Route::get('/home', HomePage::class)->name('home');
 
-Route::get('/products/cats/{parentCategoryId}', CatProducts::class)->name('products.cats');
+    Route::get('/products/dogs/{parentCategoryId}', DogProducts::class)->name('products.dogs');
 
-Route::get('/products/birds/{parentCategoryId}', BirdProducts::class)->name('products.birds');
+    Route::get('/products/cats/{parentCategoryId}', CatProducts::class)->name('products.cats');
 
-Route::get('/cart', \App\Livewire\CartPage::class)->name('cart.index');
-
+    Route::get('/products/birds/{parentCategoryId}', BirdProducts::class)->name('products.birds');
 
 
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/products', AdminProductManager::class)->name('admin.products');
-});
-
-Route::middleware(['auth'])->group(function(){
+    Route::get('/cart', \App\Livewire\CartPage::class)->name('cart.index');
 
     Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
 
     Route::get('/checkout', [PaymentController::class, 'showCheckoutForm'])->name('checkout');
     Route::post('/checkout', [PaymentController::class, 'placeOrder'])->name('checkout.placeOrder');
+
+    Route::get('/reviews', ReviewComponent::class)->name('reviews');
+
+   Route::get('/my-orders', [OrderController::class, 'viewOrders'])->name('orders.index');
 });
 
-
-Route::get('/my-orders', [OrderController::class, 'viewOrders'])->name('orders.index');
-
-
-
-//Route::get('/product/{productId}/reviews', ReviewComponent::class)->name('product.reviews');
-
-//Route::get('/reviews/{productId}', ReviewComponent::class)->name('reviews');
-
-Route::get('/reviews', ReviewComponent::class)->name('reviews');
-
-// Route::get('/test-mongo-connection', function () {
-//     $review = Review::create([
-//         'user_id' => 99,
-//         'rating' => 5,
-//         'comment' => 'Test review from Laravel app',
-//         'image' => null,
-//     ]);
-
-//     return 'Saved review with ID: ' . $review->_id;
-// });
-
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/orders', Orders::class)->name('admin.orders');
-});
-
+ 
 
 Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.verify');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.check');

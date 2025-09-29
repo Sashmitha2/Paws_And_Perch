@@ -32,9 +32,9 @@ class CatProducts extends Component
         $this->products = Product::whereIn('category_id', $subCatIds)->get();
 
         // Initialize user's cart if logged in
-        if (Auth::check()) {
+        if (Auth::guard('customer')->check()) {
             $this->cart = Cart::firstOrCreate(
-                ['user_id' => Auth::id()],
+                ['user_id' => Auth::guard('customer')->id()],
                 ['status' => 'active']
             );
         }
@@ -51,7 +51,7 @@ class CatProducts extends Component
 
     public function addToCart($productId)
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('customer')->check()) {
             session()->flash('error', 'Please login to add items to cart.');
             return;
         }
@@ -59,7 +59,7 @@ class CatProducts extends Component
         // Ensure cart is loaded
         if (!$this->cart) {
             $this->cart = Cart::firstOrCreate(
-                ['user_id' => Auth::id()],
+                ['user_id' => Auth::guard('customer')->id()],
                 ['status' => 'active']
             );
         }
@@ -73,7 +73,7 @@ class CatProducts extends Component
             $cartItem->save();
         } else {
             CartItem::create([
-                'user_id' => auth()->id(),
+                'user_id' => Auth::guard('customer')->id(),
                 'cart_id' => $this->cart->id,
                 'product_id' => $productId,
                 'quantity' => 1,

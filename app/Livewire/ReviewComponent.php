@@ -49,7 +49,7 @@ class ReviewComponent extends Component
         }
 
         Review::create([
-            'user_id' => Auth::id(),
+            'user_id' => Auth::guard('customer')->id(),
             'rating' => $this->rating,
             'comment' => $this->comment,
             'image' => $imagePath,
@@ -63,25 +63,12 @@ class ReviewComponent extends Component
         session()->flash('message', 'Review added successfully!');
     }
 
-    // public function editReview($id)
-    // {
-    //     $review = Review::find($id);
-
-    //     if ($review && $review->user_id == Auth::id()) {
-    //         $this->reviewId = $id;
-    //         $this->rating = $review->rating;
-    //         $this->comment = $review->comment;
-    //         $this->editMode = true;
-    //     } else {
-    //         session()->flash('error', 'Unauthorized action.');
-    //     }
-    // }
 
     public function editReview($id)
 {
     $review = Review::where('_id', new ObjectId($id))->first();
 
-    if ($review && $review->user_id == Auth::id()) {
+    if ($review && $review->user_id == Auth::guard('customer')->id()) {
         $this->reviewId = (string) $review->_id;
         $this->rating = $review->rating;
         $this->comment = $review->comment;
@@ -93,69 +80,7 @@ class ReviewComponent extends Component
 }
 
 
-    // public function updateReview()
-    // {
-    //     $this->validate([
-    //         'rating' => 'required|integer|min:1|max:5',
-    //         'comment' => 'required|string|max:1000',
-    //         'image' => 'nullable|image|max:2048',
-    //     ]);
-
-    //     $review = Review::find($this->reviewId);
-
-    //     if ($review && $review->user_id == Auth::id()) {
-    //         if ($this->image) {
-    //             $imagePath = $this->image->store('reviews', 'public');
-    //             $review->image = $imagePath;
-    //         }
-
-    //         $review->rating = $this->rating;
-    //         $review->comment = $this->comment;
-    //         $review->updated_at = now();
-    //         $review->save();
-
-    //         $this->reset(['rating', 'comment', 'image', 'reviewId']);
-    //         $this->editMode = false;
-    //         $this->loadReviews();
-
-    //         session()->flash('message', 'Review updated successfully!');
-    //     } else {
-    //         session()->flash('error', 'Unauthorized action.');
-    //     }
-    // }
-
-//     public function updateReview()
-// {
-//     $this->validate([
-//         'rating' => 'required|integer|min:1|max:5',
-//         'comment' => 'required|string|max:1000',
-//         'image' => 'nullable|image|max:2048',
-//     ]);
-
-//     $objectId = new ObjectId($this->reviewId);
-
-//     $review = Review::where('_id', $objectId)->first();
-
-//     if ($review && $review->user_id == Auth::id()) {
-//         if ($this->image) {
-//             $imagePath = $this->image->store('reviews', 'public');
-//             $review->image = $imagePath;
-//         }
-
-//         $review->rating = $this->rating;
-//         $review->comment = $this->comment;
-//         $review->updated_at = now();
-//         $review->save();
-
-//         $this->reset(['rating', 'comment', 'image', 'reviewId']);
-//         $this->editMode = false;
-//         $this->loadReviews();
-
-//         session()->flash('message', 'Review updated successfully!');
-//     } else {
-//         session()->flash('error', 'Unauthorized action or review not found.');
-//     }
-// }
+    
 
 public function updateReview()
 {
@@ -169,7 +94,7 @@ public function updateReview()
 
     $review = Review::where('_id', $objectId)->first();
 
-    if ($review && $review->user_id == Auth::id()) {
+    if ($review && $review->user_id == Auth::guard('customer')->id()) {
         $updateData = [
             'rating' => $this->rating,
             'comment' => $this->comment,
@@ -200,7 +125,7 @@ public function updateReview()
     {
         $review = Review::find($id);
 
-        if ($review && $review->user_id == Auth::id()) {
+        if ($review && $review->user_id == Auth::guard('customer')->id()) {
             $review->delete();
             $this->loadReviews();
 
@@ -210,12 +135,6 @@ public function updateReview()
         }
     }
 
-//     public function render()
-//     {
-//         return view('livewire.review-component', [
-//             'reviews' => $this->reviews,
-//         ]);
-//     }
 
 
 public function render()

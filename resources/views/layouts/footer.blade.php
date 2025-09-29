@@ -15,9 +15,13 @@
             <h3 class="text-white text-lg font-semibold mb-4">Quick Links</h3>
             <ul class="space-y-2">
                 <li><a href="{{ route('home') }}" class="hover:text-white">Home</a></li>
-                {{--<li><a href="{{ route('shop') }}" class="hover:text-white">Shop</a></li> 
-                <li><a href="{{ route('orders') }}" class="hover:text-white">My Orders</a></li> --}}
                 <li><a href="{{ route('profile.show') }}" class="hover:text-white">Profile</a></li>
+                <li><a href="{{ route('products.dogs', ['parentCategoryId' => 1]) }}" class="hover:text-white">Dog Products</a></li> 
+                 <li><a href="{{ route('products.cats', ['parentCategoryId' => 2])  }}" class="hover:text-white">Cat Products</a></li>
+                  <li><a href="{{ route('products.birds' , ['parentCategoryId' => 3]) }}" class="hover:text-white">Bird Products</a></li>
+                <li><a href="{{ route('orders.index') }}" class="hover:text-white">My Orders</a></li>
+                <li><a href="{{ route('reviews') }}" class="hover:text-white">Reviews</a></li>
+               
                 {{--<li><a href="{{ route('contact') }}" class="hover:text-white">Contact Us</a></li> --}}
             </ul>
         </div>

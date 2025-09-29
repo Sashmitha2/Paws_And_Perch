@@ -1,17 +1,3 @@
-{{-- <!-- resources/views/auth/verify-otp.blade.php -->
-<h2>Enter OTP</h2>
-
-@if(session('error'))
-    <p style="color:red">{{ session('error') }}</p>
-@endif
-
-<form method="POST" action="{{ route('otp.check') }}">
-    @csrf
-    <label for="otp">OTP:</label>
-    <input type="text" name="otp" id="otp" required>
-    <button type="submit">Verify</button>
-</form>
- --}}
 
 
  {{-- resources/views/auth/verify-otp.blade.php --}}

@@ -1,7 +1,3 @@
-{{-- <div class="p-6 max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Welcome to Paws & Perch, {{ auth()->user()->name }}!</h1>
-    <p class="text-gray-700">This is your customer dashboard/homepage.</p>
-</div> --}}
 
 
 <div class="min-h-screen bg-gray-100">
@@ -9,28 +5,7 @@
     
     {{--<header class="bg-white shadow">--}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            {{--<h1 class="text-2xl font-bold text-gray-800">🐾 Paws & Perch</h1>--}}
-
-            {{-- User Dropdown --}}
-            {{-- <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
-                    <span class="mr-2">{{ auth()->user()->name }}</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <div x-show="open" @click.away="open = false" x-transition
-                     class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-md z-50">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Logout
-                        </button> --}}
-                    {{--</form>
-                </div>
-            </div> --}}
+            
         </div>
     </header>
 
@@ -92,12 +67,7 @@
         </div>
     </section>
 
-    {{-- Footer --}}
-    {{-- <footer class="bg-gray-200 py-6 mt-10">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
-            &copy; {{ now()->year }} Paws & Perch. All rights reserved.
-        </div>
-    </footer> --}}
+    
 
     @include('layouts.footer')
 

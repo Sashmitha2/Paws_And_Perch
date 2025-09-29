@@ -79,7 +79,7 @@
     </div>
 
     <!-- Modal for Create/Edit -->
-    <div
+    {{-- <div
         x-show="showModal"
         x-cloak
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 px-4"
@@ -89,7 +89,25 @@
             @click.outside="closeModal()"
             class="bg-white rounded-xl shadow-xl max-w-lg w-full p-8 relative transform transition-all scale-100 opacity-100"
             style="will-change: transform, opacity;"
-        >
+        > --}}
+        
+
+        <div
+    x-show="showModal"
+    x-cloak
+    class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 px-4"
+    @keydown.window.escape="closeModal()"
+>
+    <!-- Modal Box -->
+    <div
+        @click.outside="closeModal()"
+        class="bg-white rounded-xl shadow-xl max-w-lg w-full relative transform transition-all scale-100 opacity-100 overflow-hidden"
+        style="will-change: transform, opacity; max-height: 90vh;"
+    >
+        <!-- Modal Content (Scrollable if needed) -->
+        <div class="p-8 overflow-y-auto max-h-[90vh]">
+
+
             <h3 class="text-2xl font-bold mb-6 text-gray-900" x-text="modalTitle"></h3>
 
             <form @submit.prevent="submitForm()" enctype="multipart/form-data" class="space-y-6">

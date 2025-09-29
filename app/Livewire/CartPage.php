@@ -18,9 +18,9 @@ class CartPage extends Component
 
     public function mount()
     {
-        if (Auth::check()) {
+        if (Auth::guard('customer')->check()) {
             $this->cart = Cart::firstOrCreate([
-                'user_id' => Auth::id(),
+                'user_id' => Auth::guard('customer')->id(),
                 'status' => 'active',
             ]);
             $this->loadCartItems();
@@ -30,7 +30,7 @@ class CartPage extends Component
 
     public function addToCart($productId)
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('customer')->check()) {
             session()->flash('error', 'Please login to add items to cart.');
             return;
         }
@@ -44,7 +44,7 @@ class CartPage extends Component
             $cartItem->save();
         } else {
             CartItem::create([
-                'user_id' => auth()->id(),
+                'user_id' => Auth::guard('customer')->id(),
                 'cart_id' => $this->cart->id,
                 'product_id' => $productId,
                 'quantity' => 1,
@@ -134,7 +134,7 @@ class CartPage extends Component
 
                 try {
                     $order = Order::create([
-                        'user_id' => auth()->id(),
+                        'user_id' => Auth::guard('customer')->id(),
                         'total_amount' => $this->totalPrice,
                         'order_status' => 'pending',
                         'address' => 'N/A', // or 'processing'
