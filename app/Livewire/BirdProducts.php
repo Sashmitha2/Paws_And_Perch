@@ -16,13 +16,13 @@ class BirdProducts extends Component
     public $products;
     public $search = '';
 
-    public $cart;  // store user's cart
+    public $cart;  // stores the user's cart
 
     public function mount($parentCategoryId)
     {
         $this->parentCategoryId = $parentCategoryId;
 
-        // Load ONLY Food and Cages subcategories for this parent category
+        // Loads only Food and Cages subcategories for this parent category
         $this->subcategories = Category::where('parent_category_id', $this->parentCategoryId)
             ->whereIn('name', ['Food', 'Cages'])
             ->get();
@@ -44,7 +44,7 @@ class BirdProducts extends Component
 
     public function updatedSearch()
     {
-        // Get Food and Cages subcategory IDs again (for search)
+        // Get Food and Cages subcategory IDs
         $subCatIds = Category::where('parent_category_id', $this->parentCategoryId)
             ->whereIn('name', ['Food', 'Cages'])
             ->pluck('id')
@@ -55,6 +55,8 @@ class BirdProducts extends Component
             ->get();
     }
 
+
+    //Add to cart function
     public function addToCart($productId)
     {
         if (!Auth::guard('customer')->check()) {

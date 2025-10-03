@@ -23,37 +23,34 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // ✅ Just validate credentials — don't log in yet
+        // Just validate credentials — don't log in yet
         if (!Auth::guard('customer')->validate($credentials)) {
             return back()->withInput()->with('error', 'Invalid login credentials.');
         }
 
-        // ✅ Fetch user and role check
+        // Fetch user and role check
         $user = User::where('email', $credentials['email'])->first();
         if (!$user || $user->role !== 'Customer') {
             return back()->withInput()->with('error', 'Access denied: Only customers can log in.');
         }
 
-        // ✅ Generate OTP
+        // Generate OTP
         $otp = rand(100000, 999999);
 
-        // ✅ Store OTP in session
+        // Store OTP in session
         session([
             'otp_user_id' => $user->id,
             'otp_code' => $otp,
             'otp_expires_at' => now()->addMinutes(5),
         ]);
 
-        // ✅ Log & send OTP
+        // Log & send OTP
         Log::info("OTP for {$user->email}: {$otp}");
 
-        // Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
-        //     $message->to($user->email)->subject('Your OTP Code');
-        // });
-
+        //sending the mail to the user
         Mail::to($user->email)->send(new CustomerOtpMail($otp));
 
-        // ✅ Redirect to OTP input form
+        // Redirect to OTP input form
         return redirect()->route('otp.verify');
     }
 
@@ -62,7 +59,7 @@ class AuthController extends Controller
      */
     public function showOtpForm()
     {
-        return view('auth.verify-otp'); // Make sure this Blade file exists
+        return view('auth.verify-otp'); 
     }
 
     /**
@@ -89,10 +86,10 @@ class AuthController extends Controller
             return back()->with('error', 'Invalid OTP.');
         }
 
-        // ✅ OTP is correct → log user in
+        // checking if the OTP is correct, then log user in
         $user = User::find($userId);
         Auth::guard('customer')->login($user);
-        $request->session()->regenerate(); // Prevent session fixation
+        $request->session()->regenerate(); 
 
         // Clear OTP from session
         session()->forget(['otp_code', 'otp_user_id', 'otp_expires_at']);

@@ -22,6 +22,7 @@ class AdminLoginController extends Controller
 
    
 
+    //Store a newly created resource in storage
 public function store(Request $request)
 {
     $credentials = $request->validate([
@@ -55,7 +56,7 @@ public function store(Request $request)
 
 
 
-
+// remove the specified resource from the storage
     public function destroy( Request $request)
     {
         Auth::guard('admin')->logout();

@@ -16,6 +16,7 @@ class CartPage extends Component
     public $cartItems; // Add this property to hold cart items
     public $cartItemCount = 0;
 
+    // If the customer is logged in this finds and creates an active shopping cart and loads all cart items
     public function mount()
     {
         if (Auth::guard('customer')->check()) {
@@ -28,6 +29,8 @@ class CartPage extends Component
         }
     }
 
+
+    //Add to cart function 
     public function addToCart($productId)
     {
         if (!Auth::guard('customer')->check()) {
@@ -54,13 +57,15 @@ class CartPage extends Component
         $this->loadCartItems();
         $this->updateCartCount();
 
-       // $this->emit('cartUpdated');
+       
 
        $this->dispatch('cartUpdated');
 
         session()->flash('success', 'Product added to cart!');
     }
 
+
+    //Function to remove the items in the cart
     public function removeFromCart($cartItemId)
     {
         $item = CartItem::find($cartItemId);
@@ -70,7 +75,7 @@ class CartPage extends Component
         $this->loadCartItems();
         $this->updateCartCount();
 
-        //$this->emit('cartUpdated');
+        
     }
 
     public function updateCartCount()
@@ -94,7 +99,6 @@ class CartPage extends Component
             $item->save();
             $this->loadCartItems();
             $this->updateCartCount();
-            //$this->emit('cartUpdated');
 
            $this->dispatch('cartUpdated');
 
@@ -149,9 +153,9 @@ class CartPage extends Component
                         ]);
                     }
 
-                    // Clear the cart (depends on your cart structure)
+                    // Clear the cart 
                     foreach ($this->cartItems as $item) {
-                        $item->delete(); // or however you're clearing cart
+                        $item->delete(); 
                     }
 
                     DB::commit();

@@ -82,10 +82,7 @@ class CatProducts extends Component
 
         session()->flash('success', 'Product added to cart!');
 
-    //      $this->dispatch('cart-message', [
-    //     'type' => 'success',
-    //     'message' => 'Product added to cart!'
-    // ]);
+    
 
     }
 

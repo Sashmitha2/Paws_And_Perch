@@ -29,6 +29,8 @@ class ReviewComponent extends Component
         $this->loadReviews();
     }
 
+
+    //To load existing reviews 
     public function loadReviews()
     {
         // Get ALL reviews, no filtering by product
@@ -73,7 +75,7 @@ class ReviewComponent extends Component
         $this->rating = $review->rating;
         $this->comment = $review->comment;
         $this->editMode = true;
-        $this->showEditModal = true; // Open modal
+        $this->showEditModal = true; 
     } else {
         session()->flash('error', 'Unauthorized action.');
     }
@@ -82,6 +84,7 @@ class ReviewComponent extends Component
 
     
 
+//To update a review
 public function updateReview()
 {
     $this->validate([
@@ -120,7 +123,7 @@ public function updateReview()
     }
 }
 
-
+//To delete a review
     public function deleteReview($id)
     {
         $review = Review::find($id);

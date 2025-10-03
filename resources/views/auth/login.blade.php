@@ -23,7 +23,7 @@
                         manage your orders, and keep tails wagging!
                     </p>
 
-                    <!-- Optional cute icon or mascot -->
+                    
                   <img src="{{ asset('images/pets.png') }}" alt="Cute Dog" class="w-24 mt-6 mx-auto animate-pulse" />
 
                 </div>
@@ -44,19 +44,19 @@
                     </div>
                 @endif
 
-                <!-- Success Message -->
-@if (session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 text-center shadow-sm">
-        {{ session('success') }}
-    </div>
-@endif
+                                <!-- Success Message -->
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 text-center shadow-sm">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-<!-- Error Message -->
-@if (session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-center shadow-sm">
-        {{ session('error') }}
-    </div>
-@endif
+                <!-- Error Message -->
+                @if (session('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-center shadow-sm">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
 
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">

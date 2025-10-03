@@ -18,11 +18,11 @@ class AdminProductManager extends Component
 
     public function mount()
     {
-        //$this->loadProducts();
+        
 
         $this->mainCategories = Category::whereNull('parent_category_id')->get();
 
-        // ✅ Always load all subcategories
+        // Always load all subcategories
         $this->subCategories = Category::whereNotNull('parent_category_id')->get();
     }
 

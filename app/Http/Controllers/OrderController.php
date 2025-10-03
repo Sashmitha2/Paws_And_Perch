@@ -70,6 +70,8 @@ class OrderController extends Controller
 
     }
 
+    //To display a success message when a order is placed 
+
     public function success(Order $order)
     {
         return view('orders.success', compact('order'));
@@ -86,14 +88,14 @@ class OrderController extends Controller
     }
 
 
-
+//Function to view the orders made by the users
     public function viewOrders()
-{
-    $orders = Order::with(['items.product', 'payment'])
-        ->where('user_id', Auth::id())
-        ->latest()
-        ->get();
+    {
+        $orders = Order::with(['items.product', 'payment'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
-    return view('orders.index', compact('orders'));
-}
+        return view('orders.index', compact('orders'));
+    }
 }
