@@ -11,8 +11,11 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemsController;
 use App\Http\Controllers\PaymentController;
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/customer/login', [AuthController::class, 'apiLogin']);
+Route::post('/customer/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::post('/admin/login', [AdminLoginController::class, 'apiLogin']);
+Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::apiResource('orders', OrderController::class);

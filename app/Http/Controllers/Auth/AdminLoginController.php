@@ -54,6 +54,38 @@ public function store(Request $request)
     ])->withInput()->with('error', 'Invalid login credentials.');
 }
 
+/**
+     * Handle API login (Postman / mobile apps) and return Sanctum token
+     */
+    public function apiLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (!Auth::guard('admin')->attempt($credentials)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        $user = Auth::guard('admin')->user();
+
+        if ($user->role !== 'Admin') {
+            Auth::guard('admin')->logout();
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Generate Sanctum token
+        $token = $user->createToken('admin-api-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Admin login successful',
+            'token' => $token,
+            'user' => $user
+        ]);
+    }
+
+
 
 
 // remove the specified resource from the storage

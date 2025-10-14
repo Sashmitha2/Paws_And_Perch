@@ -54,6 +54,31 @@ class AuthController extends Controller
         return redirect()->route('otp.verify');
     }
 
+    public function apiLogin(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (!Auth::guard('customer')->validate($credentials)) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+    $user = User::where('email', $credentials['email'])->first();
+    if (!$user || $user->role !== 'Customer') {
+        return response()->json(['message' => 'Access denied'], 403);
+    }
+
+    $token = $user->createToken('customer-token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login successful',
+        'token' => $token,
+        'user' => $user
+    ]);
+}
+
     /**
      * Show OTP verification form.
      */
