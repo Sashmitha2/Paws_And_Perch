@@ -68,7 +68,7 @@ Customer and administrator access is separated by role-based access control, ens
 
 ![Customer Login Screen](screenshots/customer_login.png)
 ![Verify OTP Screen](screenshots/verifyOTP.png)
-![OTP Number Screen](screenshots/OTPNumber.png)
+![OTP Number Screen](screenshots/OTP_Number.png)
 
 ### Product Management Dashboard
 
