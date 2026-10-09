@@ -1,61 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Paws & Perch – Pet Supply E-Commerce Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+Paws & Perch is a full-stack pet supply e-commerce application developed using Laravel, PHP, and MySQL. It provides an online shopping platform for pet owners to browse and purchase pet products, while allowing administrators to manage product inventory and customer orders.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application supports products for dogs, cats, and birds, with customer account management, secure authentication, shopping cart functionality, and order processing. The project was deployed using AWS EC2.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Customer Features
 
-## Learning Laravel
+* Customer registration, login, and logout.
+* Email-based OTP verification during login.
+* Password reset functionality.
+* Browse pet products by category, including dogs, cats, and birds.
+* Search for products and view product details.
+* Add products to the shopping cart, update quantities, and remove items.
+* Checkout with cash-on-delivery payment.
+* Place orders and view order history.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Admin Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* Dedicated administrator login.
+* Admin dashboard for managing the application.
+* Add, view, update, and delete products.
+* Manage product information and inventory.
+* View customer orders and update their status.
+* Cancel orders when required.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Security Features
 
-## Laravel Sponsors
+* CSRF protection for sensitive forms.
+* OTP-based customer login verification.
+* Role-based access control for customers and administrators.
+* Password hashing instead of storing plain-text passwords.
+* Client-side and server-side input validation.
+* Form validation for missing fields, invalid credentials, and weak passwords.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Technology Stack
 
-### Premium Partners
+* **Backend:** PHP, Laravel
+* **Database:** MySQL
+* **Frontend:** Blade templates and the HTML, CSS, and JavaScript used in the application
+* **Cloud Deployment:** AWS EC2
+* **Security:** OTP verification, CSRF protection, password hashing, and role-based access control
+* **Version Control:** Git and GitHub
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Application Architecture
 
-## Contributing
+The application uses Laravel for server-side application logic and MySQL for relational data storage.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Presentation layer:** Provides the customer shopping interface and administrative pages.
+2. **Application layer:** Handles authentication, product management, cart operations, checkout, order processing, and access control through Laravel.
+3. **Database layer:** MySQL stores application data, including customer accounts, products, and orders.
+4. **Deployment layer:** AWS EC2 hosts the application environment.
 
-## Code of Conduct
+Customer and administrator access is separated by role-based access control, ensuring that administrative functionality is restricted to authorized users.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Application Screenshots
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Home Page and Product Categories
 
-## License
+![Paws & Perch Home Page](screenshots/products.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Customer Login and OTP Verification
+
+![Customer Login and OTP Verification](screenshots/customer_login.png)
+![Customer Login and OTP Verification](verifyOTP.png)
+![Customer Login and OTP Verification](screenshots/OTPNumber.png)
+
+### Product Management Dashboard
+
+![Admin Product Management](screenshots/product_management.png)
+
+### Shopping Cart
+
+![Shopping Cart](screenshots/cart.png)
+
+### Checkout
+
+![Checkout Page](screenshots/checkout.png)
+
+### Admin Order Management
+
+![Admin Order Management](screenshots/order_management.png)
+
+## Testing
+
+Functional and security test cases were documented and tested for the application.
+
+Testing covered:
+
+* Customer registration and login.
+* OTP verification, including invalid OTP attempts.
+* Password validation and password reset.
+* Handling missing fields and invalid credentials.
+* Product browsing and searching.
+* Shopping cart operations and checkout validation.
+* Product creation, updates, and deletion by the administrator.
+* Order management and status updates.
+* CSRF protection, role-based access control, and input validation.
+
+The accompanying security documentation records test cases and evidence for the implemented functionality. These were documented functional tests; automated test execution is not claimed here.
+
+## Installation and Setup
+
+### Prerequisites
+
+* PHP and Composer
+* Laravel-compatible PHP extensions
+* MySQL
+* A compatible web server or Laravel development environment
+
+### Setup Instructions
+
+1. Clone the repository:
+
+   ```bash
+   git clone <your-repository-url>
+   cd <repository-directory>
+   ```
+
+2. Install the PHP dependencies:
+
+   ```bash
+   composer install
+   ```
+
+3. Create the environment configuration file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   On Windows, copy `.env.example` to `.env` manually if necessary.
+
+4. Configure the database connection and any required mail settings in `.env`.
+
+5. Generate the Laravel application key:
+
+   ```bash
+   php artisan key:generate
+   ```
+
+6. Create the required MySQL database and run the project's migrations, if applicable:
+
+   ```bash
+   php artisan migrate
+   ```
+
+7. Start the Laravel development server:
+
+   ```bash
+   php artisan serve
+   ```
+
+
+## Future Improvements
+
+* Automated unit and integration testing.
+* Application health checks, monitoring, and structured logging.
+* Improved error handling and operational visibility.
+* Automated deployment workflows using CI/CD.
+* Further performance and scalability improvements.
+
+## Author
+
+**Sashmitha Jayaseelan**
