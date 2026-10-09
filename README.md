@@ -66,8 +66,9 @@ Customer and administrator access is separated by role-based access control, ens
 
 ### Customer Login and OTP Verification
 
-| Login Screen | Verify OTP | OTP Code |
-| <img src="screenshots/customer_login.png" width="300" alt="Customer Login"> | <img src="verifyOTP.png" width="300" alt="Verify OTP"> | <img src="screenshots/OTPNumber.png" width="300" alt="OTP Number"> |
+![Customer Login Screen](screenshots/customer_login.png)
+![Verify OTP Screen](verifyOTP.png)
+![OTP Number Screen](screenshots/OTPNumber.png)
 
 ### Product Management Dashboard
 
