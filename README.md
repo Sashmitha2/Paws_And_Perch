@@ -66,9 +66,8 @@ Customer and administrator access is separated by role-based access control, ens
 
 ### Customer Login and OTP Verification
 
-![Customer Login and OTP Verification](screenshots/customer_login.png)
-![Customer Login and OTP Verification](verifyOTP.png)
-![Customer Login and OTP Verification](screenshots/OTPNumber.png)
+| Login Screen | Verify OTP | OTP Code |
+| <img src="screenshots/customer_login.png" width="300" alt="Customer Login"> | <img src="verifyOTP.png" width="300" alt="Verify OTP"> | <img src="screenshots/OTPNumber.png" width="300" alt="OTP Number"> |
 
 ### Product Management Dashboard
 
@@ -101,8 +100,6 @@ Testing covered:
 * Product creation, updates, and deletion by the administrator.
 * Order management and status updates.
 * CSRF protection, role-based access control, and input validation.
-
-The accompanying security documentation records test cases and evidence for the implemented functionality. These were documented functional tests; automated test execution is not claimed here.
 
 ## Installation and Setup
 
@@ -156,14 +153,6 @@ The accompanying security documentation records test cases and evidence for the 
    php artisan serve
    ```
 
-
-## Future Improvements
-
-* Automated unit and integration testing.
-* Application health checks, monitoring, and structured logging.
-* Improved error handling and operational visibility.
-* Automated deployment workflows using CI/CD.
-* Further performance and scalability improvements.
 
 ## Author
 
